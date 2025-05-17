@@ -17,9 +17,12 @@ interface BookRepositoryInterface
     /**
      * Retrieve all books from the database.
      *
+     * @param  string  $sortBy  Field to sort by
+     * @param  string  $sortDirection  Sort direction (asc or desc)
+     *
      * @return Collection<int, Book>
      */
-    public function all(): Collection;
+    public function all(string $sortBy = 'id', string $sortDirection = 'desc'): Collection;
 
     /**
      * Delete a book from the database.

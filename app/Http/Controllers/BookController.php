@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BookCreateRequest;
+use App\Http\Requests\BookIndexRequest;
 use App\Http\Requests\BookUpdateRequest;
 use App\Models\Book;
 use App\Services\BookService;
@@ -20,12 +21,17 @@ class BookController extends Controller
     /**
      * Display a listing of the books.
      */
-    public function index(): Response
+    public function index(BookIndexRequest $request): Response
     {
-        $books = $this->bookService->getAll();
+        $sortField = $request->getSortField();
+        $sortDirection = $request->getSortDirection();
+
+        $books = $this->bookService->getAll($sortField, $sortDirection->value);
 
         return Inertia::render('Books/Index', [
             'books' => $books,
+            'sortBy' => $sortField,
+            'sortDirection' => $sortDirection->value,
         ]);
     }
 

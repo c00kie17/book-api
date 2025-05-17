@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services;
 
+use App\Enums\SortDirection;
 use App\Models\Book;
 use App\Repositories\BookRepositoryInterface;
 use App\Services\BookService;
@@ -74,11 +75,31 @@ class BookServiceTest extends TestCase
 
         $this->bookRepository->shouldReceive('all')
             ->once()
-            ->withNoArgs()
+            ->with('id', SortDirection::ASC->value)
             ->andReturn($expectedBooks);
 
         $result = $this->bookService->getAll();
         $this->assertSame($expectedBooks, $result);
+    }
+
+    #[Test]
+    public function test_get_all_with_custom_sorting(): void
+    {
+        $books = new Collection([
+            new Book(['id' => 2, 'title' => 'Book B', 'author' => 'Author 2']),
+            new Book(['id' => 1, 'title' => 'Book A', 'author' => 'Author 1']),
+        ]);
+
+        $this->bookRepository
+            ->shouldReceive('all')
+            ->with('title', SortDirection::DESC->value)
+            ->once()
+            ->andReturn($books);
+
+        $result = $this->bookService->getAll('title', SortDirection::DESC);
+
+        $this->assertSame($books, $result);
+        $this->assertCount(2, $result);
     }
 
     #[Test]
@@ -87,7 +108,7 @@ class BookServiceTest extends TestCase
         $emptyCollection = new Collection;
         $this->bookRepository->shouldReceive('all')
             ->once()
-            ->withNoArgs()
+            ->with('id', SortDirection::ASC->value)
             ->andReturn($emptyCollection);
 
         $result = $this->bookService->getAll();

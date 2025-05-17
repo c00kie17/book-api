@@ -1,3 +1,4 @@
+import { SortDirection } from "../types/Enums/SortDirection.ts";
 import { Book, BookData } from "../types/Services/BookService";
 
 export interface IBookService {
@@ -38,4 +39,11 @@ export interface IBookService {
         onSuccess?: () => void,
         onError?: (errors: unknown) => void,
     ): void;
+
+    /**
+     * Sort books by a specified field and direction
+     * @param field The field to sort by
+     * @param direction The sort direction
+     */
+    sortBooks(field: string, direction: SortDirection): void;
 }

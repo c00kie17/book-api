@@ -16,9 +16,11 @@ class EloquentBookRepository implements BookRepositoryInterface
         return $this->model->create($data);
     }
 
-    public function all(): Collection
+    public function all(string $sortBy = 'id', string $sortDirection = 'asc'): Collection
     {
-        return $this->model->all();
+        return $this->model
+            ->orderBy($sortBy, $sortDirection)
+            ->get();
     }
 
     public function delete(int $id): bool

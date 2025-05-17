@@ -2,8 +2,6 @@ import { render, screen, fireEvent } from "@testing-library/react";
 
 import Index from "../../../Pages/Books/Index";
 import { Book } from "../../../types/Services/BookService.js";
-import BookFormMock from "../../__mocks__/Components/BookForm.tsx";
-import BookListMock from "../../__mocks__/Components/BookList.tsx";
 
 jest.mock("@inertiajs/react", () => ({
     router: {
@@ -26,15 +24,17 @@ jest.mock("@inertiajs/react", () => ({
     ),
 }));
 
-jest.mock("../../../Components/BookForm", () => ({
-    __esModule: true,
-    default: BookFormMock,
-}));
+jest.mock("../../../Components/BookForm", () =>
+    jest.requireActual("../../__mocks__/Components/BookForm.tsx"),
+);
 
-jest.mock("../../../Components/BookList", () => ({
-    __esModule: true,
-    default: BookListMock,
-}));
+jest.mock("../../../Components/BookList", () =>
+    jest.requireActual("../../__mocks__/Components/BookList.tsx"),
+);
+
+jest.mock("../../../Components/SortableTableHeader", () =>
+    jest.requireActual("../../__mocks__/Components/SortableTableHeader.tsx"),
+);
 
 describe("Index Page Component", () => {
     const mockBooks: Book[] = [

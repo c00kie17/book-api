@@ -5,8 +5,9 @@ import BookForm from "../../Components/BookForm";
 import BookList from "../../Components/BookList";
 import BookService from "../../Services/BookService";
 import { IndexProps } from "../../types";
+import { SortDirection } from "../../types/Enums/SortDirection.ts";
 
-export default function Index({ books }: IndexProps) {
+export default function Index({ books, sortBy, sortDirection }: IndexProps) {
     const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
     const bookService = new BookService();
 
@@ -26,7 +27,12 @@ export default function Index({ books }: IndexProps) {
                     </button>
                 </div>
 
-                <BookList books={books} bookService={bookService} />
+                <BookList
+                    books={books}
+                    bookService={bookService}
+                    sortBy={sortBy ?? "id"}
+                    sortDirection={sortDirection ?? SortDirection.DESC}
+                />
 
                 <BookForm
                     isOpen={isFormOpen}

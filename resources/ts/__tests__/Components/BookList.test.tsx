@@ -1,14 +1,13 @@
 import { render, screen } from "@testing-library/react";
 
 import BookList from "../../Components/BookList.tsx";
-import BookRow from "../../Components/BookRow.tsx";
+import { SortDirection } from "../../types/Enums/SortDirection.ts";
 import { Book } from "../../types/Services/BookService";
 import { BookServiceMock } from "../__mocks__/Services/BookService";
 
-jest.mock("../../Components/BookRow", () => ({
-    __esModule: true,
-    default: BookRow,
-}));
+jest.mock("../../Components/BookRow", () =>
+    jest.requireActual("../__mocks__/Components/BookRow"),
+);
 
 describe("BookList Component", () => {
     const bookServiceMock = new BookServiceMock();
@@ -23,14 +22,28 @@ describe("BookList Component", () => {
             { id: 2, title: "Test Book 2", author: "Author 2" },
         ];
 
-        render(<BookList books={books} bookService={bookServiceMock} />);
+        render(
+            <BookList
+                books={books}
+                bookService={bookServiceMock}
+                sortBy={"id"}
+                sortDirection={SortDirection.DESC}
+            />,
+        );
 
         expect(screen.getByTestId("book-row-1")).toBeInTheDocument();
         expect(screen.getByTestId("book-row-2")).toBeInTheDocument();
     });
 
     test('displays "No books found" when no books provided', () => {
-        render(<BookList books={[]} bookService={bookServiceMock} />);
+        render(
+            <BookList
+                books={[]}
+                bookService={bookServiceMock}
+                sortBy={"id"}
+                sortDirection={SortDirection.DESC}
+            />,
+        );
         expect(screen.getByText("No books found")).toBeInTheDocument();
     });
 });

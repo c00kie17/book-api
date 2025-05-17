@@ -1,5 +1,6 @@
 import { router } from "@inertiajs/react";
 
+import { SortDirection } from "../types/Enums/SortDirection.ts";
 import {
     BookData,
     Endpoints,
@@ -80,6 +81,21 @@ export default class BookService implements IBookService {
             "patch",
             this.ENDPOINTS.BOOK_BY_ID(id),
             data,
+            onSuccess,
+            onError,
+        );
+    }
+
+    sortBooks(
+        field: string,
+        direction: SortDirection,
+        onSuccess?: () => void,
+        onError?: (errors: unknown) => void,
+    ) {
+        return this.handleResponse(
+            "get",
+            `${this.ENDPOINTS.BOOKS}?sort_by=${field}&sort_direction=${direction}`,
+            {},
             onSuccess,
             onError,
         );

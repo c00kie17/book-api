@@ -16,6 +16,15 @@ class BookControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Book::create(['title' => 'Z Book', 'author' => 'A Author']);
+        Book::create(['title' => 'A Book', 'author' => 'Z Author']);
+        Book::create(['title' => 'M Book', 'author' => 'M Author']);
+    }
+
     private function mockServiceException(string $method, string $exceptionClass, string $message): void
     {
         $this->mock(BookService::class, function ($mock) use ($method, $exceptionClass, $message) {
@@ -31,29 +40,17 @@ class BookControllerTest extends TestCase
         $response->assertSessionHas('success', $message);
     }
 
-    public function test_index_returns_view_with_books()
+    public function test_index_returns_view_with_books_sorted(): void
     {
-        $books = collect([
-            new Book(['id' => 1, 'title' => 'Test Book 1', 'author' => 'Author 1']),
-            new Book(['id' => 2, 'title' => 'Test Book 2', 'author' => 'Author 2']),
-        ]);
-
-        $mockService = Mockery::mock(BookService::class);
-        $mockService->shouldReceive('getAll')
-            ->once()
-            ->andReturn($books);
-
-        $this->app->instance(BookService::class, $mockService);
-
-        $response = $this->get(route('books.index'));
+        $response = $this->get(route('books.index', ['sort_by' => 'title', 'sort_direction' => 'asc']));
 
         $response->assertInertia(fn (Assert $page) => $page
-            ->component('Books/Index')
-            ->has('books', 2)
-            ->where('books.0.title', 'Test Book 1')
-            ->where('books.0.author', 'Author 1')
-            ->where('books.1.title', 'Test Book 2')
-            ->where('books.1.author', 'Author 2'),
+            ->has('books', 3)
+            ->where('books.0.title', 'A Book')
+            ->where('books.1.title', 'M Book')
+            ->where('books.2.title', 'Z Book')
+            ->where('sortBy', 'title')
+            ->where('sortDirection', 'asc'),
         );
     }
 
@@ -70,8 +67,59 @@ class BookControllerTest extends TestCase
         $response = $this->get(route('books.index'));
 
         $response->assertInertia(fn (Assert $page) => $page
-            ->component('Books/Index')
             ->has('books', 0),
+        );
+    }
+
+    public function test_index_handles_invalid_sort_field(): void
+    {
+        $response = $this->get(route('books.index', ['sort_by' => 'invalid_field', 'sort_direction' => 'asc']));
+
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors('sort_by');
+    }
+
+    public function test_index_handles_invalid_sort_direction(): void
+    {
+        $response = $this->get(route('books.index', ['sort_by' => 'id', 'sort_direction' => 'invalid']));
+
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors('sort_direction');
+    }
+
+    public function test_index_handles_no_sort_parameters(): void
+    {
+        $response = $this->get(route('books.index'));
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page
+            ->has('books', 3)
+            ->where('sortBy', 'id')
+            ->where('sortDirection', 'asc'),
+        );
+    }
+
+    public function test_index_handles_only_sort_field_provided(): void
+    {
+        $response = $this->get(route('books.index', ['sort_by' => 'title']));
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page
+            ->has('books', 3)
+            ->where('sortBy', 'title')
+            ->where('sortDirection', 'asc'),
+        );
+    }
+
+    public function test_index_handles_only_sort_direction_provided(): void
+    {
+        $response = $this->get(route('books.index', ['sort_direction' => 'desc']));
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page
+            ->has('books', 3)
+            ->where('sortBy', 'id')
+            ->where('sortDirection', 'desc'),
         );
     }
 
@@ -237,10 +285,5 @@ class BookControllerTest extends TestCase
             'id' => $book->id,
             'author' => $originalAuthor,
         ]);
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
     }
 }

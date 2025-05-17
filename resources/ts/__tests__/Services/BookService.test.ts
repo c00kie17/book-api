@@ -2,6 +2,7 @@ import { router } from "@inertiajs/react";
 
 import BookService from "../../Services/BookService";
 import { IBookService } from "../../Services/IBookService.js";
+import { SortDirection } from "../../types/Enums/SortDirection.ts";
 import { Book, BookData } from "../../types/Services/BookService";
 
 jest.mock("@inertiajs/react", () => ({
@@ -9,6 +10,7 @@ jest.mock("@inertiajs/react", () => ({
         post: jest.fn(),
         delete: jest.fn(),
         patch: jest.fn(),
+        get: jest.fn(),
     },
 }));
 
@@ -72,6 +74,24 @@ describe("BookService", () => {
         expect(router.patch).toHaveBeenCalledWith(
             "/books/1",
             mockData,
+            expect.objectContaining({
+                onSuccess: expect.any(Function),
+                onError: expect.any(Function),
+                preserveState: true,
+                preserveScroll: true,
+            }),
+        );
+    });
+
+    test("sortBooks calls router.get with correct parameters", () => {
+        const field = "title";
+        const direction = SortDirection.DESC;
+
+        bookService.sortBooks(field, direction);
+
+        expect(router.get).toHaveBeenCalledWith(
+            "/books?sort_by=title&sort_direction=desc",
+            {},
             expect.objectContaining({
                 onSuccess: expect.any(Function),
                 onError: expect.any(Function),
