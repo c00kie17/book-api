@@ -1,0 +1,78 @@
+import { render, screen, fireEvent } from "@testing-library/react";
+
+import Index from "../../../Pages/Books/Index";
+import { Book } from "../../../types/Services/BookService.js";
+import BookFormMock from "../../__mocks__/Components/BookForm.tsx";
+import BookListMock from "../../__mocks__/Components/BookList.tsx";
+
+jest.mock("@inertiajs/react", () => ({
+    router: {
+        post: jest.fn(),
+        delete: jest.fn(),
+        patch: jest.fn(),
+    },
+    useForm: () => ({
+        data: {},
+        setData: jest.fn(),
+        processing: false,
+        errors: {},
+        reset: jest.fn(),
+        post: jest.fn(),
+        delete: jest.fn(),
+        patch: jest.fn(),
+    }),
+    Head: ({ title }: { title: string }) => (
+        <title data-testid="page-title">{title}</title>
+    ),
+}));
+
+jest.mock("../../../Components/BookForm", () => ({
+    __esModule: true,
+    default: BookFormMock,
+}));
+
+jest.mock("../../../Components/BookList", () => ({
+    __esModule: true,
+    default: BookListMock,
+}));
+
+describe("Index Page Component", () => {
+    const mockBooks: Book[] = [
+        { id: 1, title: "Book 1", author: "Author 1" },
+        { id: 2, title: "Book 2", author: "Author 2" },
+    ];
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test("renders book list with provided books", () => {
+        render(<Index books={mockBooks} />);
+
+        const bookList = screen.getByTestId("book-list");
+        expect(bookList).toBeInTheDocument();
+        expect(JSON.parse(bookList.getAttribute("data-books") || "[]")).toEqual(
+            mockBooks,
+        );
+    });
+
+    test("opens book form when Add New Book button is clicked", () => {
+        render(<Index books={mockBooks} />);
+
+        expect(screen.queryByTestId("book-form")).not.toBeInTheDocument();
+
+        fireEvent.click(screen.getByText("Add New Book"));
+
+        expect(screen.getByTestId("book-form")).toBeInTheDocument();
+    });
+
+    test("closes book form when form is closed", () => {
+        render(<Index books={mockBooks} />);
+
+        fireEvent.click(screen.getByText("Add New Book"));
+        expect(screen.getByTestId("book-form")).toBeInTheDocument();
+
+        fireEvent.click(screen.getByText("Cancel"));
+        expect(screen.queryByTestId("book-form")).not.toBeInTheDocument();
+    });
+});
