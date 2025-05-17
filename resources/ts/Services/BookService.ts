@@ -86,15 +86,24 @@ export default class BookService implements IBookService {
         );
     }
 
-    sortBooks(
-        field: string,
-        direction: SortDirection,
+    getAllBooks(
+        field: string = "id",
+        direction: SortDirection = SortDirection.DESC,
+        searchTerm: string = "",
         onSuccess?: () => void,
         onError?: (errors: unknown) => void,
     ) {
+        const params = new URLSearchParams();
+        params.append("sort_by", field);
+        params.append("sort_direction", direction);
+
+        if (searchTerm.trim()) {
+            params.append("search_term", searchTerm.trim());
+        }
+
         return this.handleResponse(
             "get",
-            `${this.ENDPOINTS.BOOKS}?sort_by=${field}&sort_direction=${direction}`,
+            `${this.ENDPOINTS.BOOKS}?${params.toString()}`,
             {},
             onSuccess,
             onError,

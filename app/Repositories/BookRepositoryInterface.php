@@ -42,4 +42,15 @@ interface BookRepositoryInterface
      * @return Book The updated book
      */
     public function update(int $id, array $data): Book;
+
+    /**
+     * Search books by title or author.
+     *
+     * @param  string  $searchTerm  The search term
+     * @param  string  $sortBy  Field to sort by
+     * @param  string  $sortDirection  Sort direction (asc or desc)
+     *
+     * @return Collection<int, Book>
+     */
+    public function search(string $searchTerm, string $sortBy = 'id', string $sortDirection = 'desc'): Collection;
 }

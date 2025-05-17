@@ -9,6 +9,7 @@ export default function BookList({
     bookService,
     sortBy,
     sortDirection,
+    searchTerm,
 }: BookListProps) {
     return (
         <div className="mt-6 overflow-x-auto">
@@ -22,6 +23,7 @@ export default function BookList({
                             currentSort={sortBy}
                             currentDirection={sortDirection}
                             bookService={bookService}
+                            searchTerm={searchTerm}
                         />
                         <SortableTableHeader
                             column="author"
@@ -29,6 +31,7 @@ export default function BookList({
                             currentSort={sortBy}
                             currentDirection={sortDirection}
                             bookService={bookService}
+                            searchTerm={searchTerm}
                         />
                         <th className="text-left px-4 py-3 border-b">
                             Actions
@@ -47,7 +50,9 @@ export default function BookList({
                     ) : (
                         <tr>
                             <td colSpan={4} className="text-center py-6">
-                                No books found
+                                {searchTerm
+                                    ? "No books match your search"
+                                    : "No books found"}
                             </td>
                         </tr>
                     )}

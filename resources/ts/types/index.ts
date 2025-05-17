@@ -5,4 +5,5 @@ export type IndexProps = {
     books: Book[];
     sortBy?: string;
     sortDirection?: SortDirection;
+    searchTerm?: string;
 };

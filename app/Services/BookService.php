@@ -23,9 +23,18 @@ class BookService
      *
      * @param  string  $sortBy  Field to sort by
      * @param  SortDirection  $sortDirection  Sort direction
+     * @param  string  $searchTerm  author or title name to filter by
      */
-    public function getAll(string $sortBy = 'id', SortDirection $sortDirection = SortDirection::DESC): Collection
+    public function getAll(string $sortBy = 'id', SortDirection $sortDirection = SortDirection::DESC, string $searchTerm = ''): Collection
     {
+        if (trim($searchTerm) !== '') {
+            return $this->bookRepository->search(
+                $searchTerm,
+                $sortBy,
+                $sortDirection->value,
+            );
+        }
+
         return $this->bookRepository->all($sortBy, $sortDirection->value);
     }
 

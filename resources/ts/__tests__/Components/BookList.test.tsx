@@ -28,6 +28,8 @@ describe("BookList Component", () => {
                 bookService={bookServiceMock}
                 sortBy={"id"}
                 sortDirection={SortDirection.DESC}
+                searchTerm={""}
+                onSort={() => {}}
             />,
         );
 
@@ -42,8 +44,26 @@ describe("BookList Component", () => {
                 bookService={bookServiceMock}
                 sortBy={"id"}
                 sortDirection={SortDirection.DESC}
+                searchTerm={""}
+                onSort={() => {}}
             />,
         );
         expect(screen.getByText("No books found")).toBeInTheDocument();
+    });
+
+    test("displays 'No books match your search' when books array is empty and there is a search term", () => {
+        render(
+            <BookList
+                books={[]}
+                bookService={bookServiceMock}
+                sortBy="id"
+                sortDirection={SortDirection.DESC}
+                searchTerm="test query"
+                onSort={() => {}}
+            />,
+        );
+        expect(
+            screen.getByText("No books match your search"),
+        ).toBeInTheDocument();
     });
 });

@@ -9,6 +9,7 @@ export default function SortableTableHeader({
     currentSort,
     currentDirection,
     bookService,
+    searchTerm,
 }: SortableTableHeaderProps) {
     const isSorted = currentSort === column;
     const newDirection =
@@ -17,7 +18,9 @@ export default function SortableTableHeader({
             : SortDirection.ASC;
 
     const handleSort = () => {
-        bookService.sortBooks(column, newDirection);
+        return searchTerm !== ""
+            ? bookService.getAllBooks(column, newDirection, searchTerm)
+            : bookService.getAllBooks(column, newDirection);
     };
 
     return (

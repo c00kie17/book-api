@@ -23,6 +23,17 @@ class EloquentBookRepository implements BookRepositoryInterface
             ->get();
     }
 
+    public function search(string $searchTerm, string $sortBy = 'id', string $sortDirection = 'desc'): Collection
+    {
+        return $this->model
+            ->where(function ($query) use ($searchTerm) {
+                $query->where('title', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('author', 'LIKE', "%{$searchTerm}%");
+            })
+            ->orderBy($sortBy, $sortDirection)
+            ->get();
+    }
+
     public function delete(int $id): bool
     {
         $book = $this->model->findOrFail($id);

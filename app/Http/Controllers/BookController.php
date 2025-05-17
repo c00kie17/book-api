@@ -25,13 +25,15 @@ class BookController extends Controller
     {
         $sortField = $request->getSortField();
         $sortDirection = $request->getSortDirection();
+        $searchTerm = $request->getSearchTerm();
 
-        $books = $this->bookService->getAll($sortField, $sortDirection);
+        $books = $this->bookService->getAll($sortField, $sortDirection, $searchTerm);
 
         return Inertia::render('Books/Index', [
             'books' => $books,
             'sortBy' => $sortField,
             'sortDirection' => $sortDirection->value,
+            'searchTerm' => $searchTerm,
         ]);
     }
 

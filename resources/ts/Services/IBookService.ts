@@ -44,6 +44,15 @@ export interface IBookService {
      * Sort books by a specified field and direction
      * @param field The field to sort by
      * @param direction The sort direction
+     * @param searchTerm Optional search term to filter by
+     * @param onSuccess Optional callback to execute on successful sort
+     * @param onError Optional callback to execute on error
      */
-    sortBooks(field: string, direction: SortDirection): void;
+    getAllBooks(
+        field: string,
+        direction: SortDirection,
+        searchTerm?: string,
+        onSuccess?: () => void,
+        onError?: (errors: unknown) => void,
+    ): void;
 }

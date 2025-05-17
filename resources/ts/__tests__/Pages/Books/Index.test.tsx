@@ -36,6 +36,10 @@ jest.mock("../../../Components/SortableTableHeader", () =>
     jest.requireActual("../../__mocks__/Components/SortableTableHeader.tsx"),
 );
 
+jest.mock("../../../Components/SearchBar.tsx", () =>
+    jest.requireActual("../../__mocks__/Components/SearchBar.tsx"),
+);
+
 describe("Index Page Component", () => {
     const mockBooks: Book[] = [
         { id: 1, title: "Book 1", author: "Author 1" },
@@ -54,6 +58,16 @@ describe("Index Page Component", () => {
         expect(JSON.parse(bookList.getAttribute("data-books") || "[]")).toEqual(
             mockBooks,
         );
+    });
+
+    test("renders search bar", () => {
+        render(<Index books={mockBooks} />);
+
+        const searchBar = screen.getByTestId("search-bar");
+        expect(searchBar).toBeInTheDocument();
+
+        const searchInput = screen.getByTestId("search-input");
+        expect(searchInput).toBeInTheDocument();
     });
 
     test("opens book form when Add New Book button is clicked", () => {

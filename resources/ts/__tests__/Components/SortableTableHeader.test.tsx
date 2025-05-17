@@ -42,7 +42,7 @@ describe("SortableTableHeader Component", () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        jest.spyOn(bookServiceMock, "sortBooks");
+        jest.spyOn(bookServiceMock, "getAllBooks");
     });
 
     test("renders with correct label and visual indicators", () => {
@@ -54,6 +54,7 @@ describe("SortableTableHeader Component", () => {
                     currentSort="id"
                     currentDirection={SortDirection.ASC}
                     bookService={bookServiceMock}
+                    searchTerm={""}
                 />
             </TableWrapper>,
         );
@@ -75,6 +76,7 @@ describe("SortableTableHeader Component", () => {
                     currentSort="title"
                     currentDirection={SortDirection.ASC}
                     bookService={bookServiceMock}
+                    searchTerm={""}
                 />
             </TableWrapper>,
         );
@@ -92,6 +94,7 @@ describe("SortableTableHeader Component", () => {
                     currentSort="title"
                     currentDirection={SortDirection.ASC}
                     bookService={bookServiceMock}
+                    searchTerm={""}
                 />
             </TableWrapper>,
         );
@@ -101,9 +104,56 @@ describe("SortableTableHeader Component", () => {
 
         fireEvent.click(screen.getByTestId("sort-header-title"));
 
-        expect(bookServiceMock.sortBooks).toHaveBeenCalledWith(
+        expect(bookServiceMock.getAllBooks).toHaveBeenCalledWith(
             "title",
             SortDirection.DESC,
+        );
+    });
+
+    test("calls getAllBooks without searchTerm when searchTerm is not provided", () => {
+        render(
+            <TableWrapper>
+                <SortableTableHeader
+                    column="title"
+                    label="Book Title"
+                    currentSort="title"
+                    currentDirection={SortDirection.ASC}
+                    bookService={bookServiceMock}
+                />
+            </TableWrapper>,
+        );
+
+        fireEvent.click(screen.getByTestId("sort-header-title"));
+
+        expect(bookServiceMock.getAllBooks).toHaveBeenCalledWith(
+            "title",
+            SortDirection.DESC,
+            undefined,
+        );
+    });
+
+    test("calls getAllBooks with searchTerm when searchTerm is provided and not empty", () => {
+        const searchTerm = "test query";
+
+        render(
+            <TableWrapper>
+                <SortableTableHeader
+                    column="title"
+                    label="Book Title"
+                    currentSort="title"
+                    currentDirection={SortDirection.ASC}
+                    bookService={bookServiceMock}
+                    searchTerm={searchTerm}
+                />
+            </TableWrapper>,
+        );
+
+        fireEvent.click(screen.getByTestId("sort-header-title"));
+
+        expect(bookServiceMock.getAllBooks).toHaveBeenCalledWith(
+            "title",
+            SortDirection.DESC,
+            searchTerm,
         );
     });
 });

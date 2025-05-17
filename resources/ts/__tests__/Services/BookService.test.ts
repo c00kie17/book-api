@@ -83,14 +83,15 @@ describe("BookService", () => {
         );
     });
 
-    test("sortBooks calls router.get with correct parameters", () => {
+    test("getAllBooks calls router.get with correct parameters", () => {
         const field = "title";
         const direction = SortDirection.DESC;
+        const searchTerm = "something";
 
-        bookService.sortBooks(field, direction);
+        bookService.getAllBooks(field, direction, searchTerm);
 
         expect(router.get).toHaveBeenCalledWith(
-            "/books?sort_by=title&sort_direction=desc",
+            "/books?sort_by=title&sort_direction=desc&search_term=something",
             {},
             expect.objectContaining({
                 onSuccess: expect.any(Function),

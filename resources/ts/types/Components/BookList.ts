@@ -5,6 +5,8 @@ import { Book } from "../Services/BookService";
 export type BookListProps = {
     books: Book[];
     bookService: IBookService;
-    sortBy: string;
-    sortDirection: SortDirection;
+    sortBy?: string;
+    sortDirection?: SortDirection;
+    searchTerm?: string;
+    onSort: (field: string, direction: SortDirection) => void;
 };

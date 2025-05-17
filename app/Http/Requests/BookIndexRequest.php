@@ -29,6 +29,7 @@ class BookIndexRequest extends FormRequest
         return [
             'sort_by' => ['sometimes', Rule::in(self::ALLOWED_SORT_FIELDS)],
             'sort_direction' => ['sometimes', Rule::in(['asc', 'desc'])],
+            'search_term' => ['sometimes', 'nullable', 'string', 'max:255'],
         ];
     }
 
@@ -45,11 +46,19 @@ class BookIndexRequest extends FormRequest
      */
     public function getSortDirection(): SortDirection
     {
-        $direction = strtolower($this->input('sort_direction', 'asc'));
+        $direction = strtolower($this->input('sort_direction', 'desc'));
 
         return match ($direction) {
             'desc' => SortDirection::DESC,
             default => SortDirection::ASC
         };
+    }
+
+    /**
+     * Get the validated search term.
+     */
+    public function getSearchTerm(): ?string
+    {
+        return $this->input('search_term', '');
     }
 }

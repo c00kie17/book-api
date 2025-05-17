@@ -34,9 +34,10 @@ export class BookServiceMock implements IBookService {
         },
     );
 
-    sortBooks(
+    getAllBooks(
         _field: string,
         _direction: SortDirection,
+        _searchTerm?: string,
         onSuccess?: () => void,
         _onError?: (errors: unknown) => void,
     ) {
