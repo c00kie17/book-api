@@ -75,7 +75,7 @@ class BookServiceTest extends TestCase
 
         $this->bookRepository->shouldReceive('all')
             ->once()
-            ->with('id', SortDirection::ASC->value)
+            ->with('id', SortDirection::DESC->value)
             ->andReturn($expectedBooks);
 
         $result = $this->bookService->getAll();
@@ -108,7 +108,7 @@ class BookServiceTest extends TestCase
         $emptyCollection = new Collection;
         $this->bookRepository->shouldReceive('all')
             ->once()
-            ->with('id', SortDirection::ASC->value)
+            ->with('id', SortDirection::DESC->value)
             ->andReturn($emptyCollection);
 
         $result = $this->bookService->getAll();

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\SortDirection;
 use App\Exceptions\BookCreationException;
 use App\Exceptions\BookDeletionException;
 use App\Exceptions\BookUpdateException;
@@ -21,11 +22,11 @@ class BookService
      * Get a complete list of all books.
      *
      * @param  string  $sortBy  Field to sort by
-     * @param  string  $sortDirection  Sort direction (asc or desc)
+     * @param  SortDirection  $sortDirection  Sort direction
      */
-    public function getAll(string $sortBy = 'id', string $sortDirection = 'desc'): Collection
+    public function getAll(string $sortBy = 'id', SortDirection $sortDirection = SortDirection::DESC): Collection
     {
-        return $this->bookRepository->all($sortBy, $sortDirection);
+        return $this->bookRepository->all($sortBy, $sortDirection->value);
     }
 
     /**
