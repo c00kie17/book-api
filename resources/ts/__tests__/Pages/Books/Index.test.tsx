@@ -24,15 +24,15 @@ jest.mock("@inertiajs/react", () => ({
     ),
 }));
 
-jest.mock("../../../Components/BookForm.tsx", () =>
-    jest.requireActual("../../__mocks__/Components/BookForm.tsx"),
+jest.mock("../../../Components/CreateForm.tsx", () =>
+    jest.requireActual("../../__mocks__/Components/CreateForm.tsx"),
 );
 
 jest.mock("../../../Components/BookList", () =>
     jest.requireActual("../../__mocks__/Components/BookList.tsx"),
 );
 
-jest.mock("../../../Components/SortableTableHeader", () =>
+jest.mock("../../../Components/UI/TableHeaderField.tsx", () =>
     jest.requireActual("../../__mocks__/Components/SortableTableHeader.tsx"),
 );
 

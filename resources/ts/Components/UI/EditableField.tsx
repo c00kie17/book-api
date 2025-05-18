@@ -1,43 +1,51 @@
 import { Pencil, Check, X } from "lucide-react";
 import { useState, ChangeEvent } from "react";
 
-import { EditableRowDataProps } from "../types/Components/EditableRowData.ts";
+import { EditableFieldProps } from "../../types/Components/UI/EditableField.ts";
 
-export default function EditableRowData({
-    book,
-    bookService,
-}: EditableRowDataProps) {
+export default function EditableField({
+    value,
+    onUpdate,
+    className = "",
+    label,
+    placeholder = "Enter value...",
+}: EditableFieldProps) {
     const [isEditing, setIsEditing] = useState<boolean>(false);
-    const [author, setAuthor] = useState<string>(book.author);
-    const [originalAuthor] = useState<string>(book.author);
+    const [currentValue, setCurrentValue] = useState<string>(value);
+    const [originalValue] = useState<string>(value);
 
     const handleUpdate = (): void => {
-        bookService.updateBook(book.id, { author }, () => {
-            setIsEditing(false);
-        });
+        if (currentValue.trim() === "") return;
+        onUpdate(currentValue);
+        setIsEditing(false);
     };
 
     const handleCancel = (): void => {
         setIsEditing(false);
-        setAuthor(originalAuthor);
+        setCurrentValue(originalValue);
     };
 
     if (isEditing) {
         return (
-            <div className="flex items-center space-x-2">
+            <div className={`flex items-center space-x-2 ${className}`}>
+                {label && (
+                    <span className="text-sm text-gray-500">{label}:</span>
+                )}
                 <input
                     type="text"
-                    value={author}
+                    value={currentValue}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                        setAuthor(e.target.value)
+                        setCurrentValue(e.target.value)
                     }
                     className="border rounded px-2 py-1 flex-grow"
+                    placeholder={placeholder}
                     autoFocus
                 />
                 <button
                     onClick={handleUpdate}
                     className="text-green-500 hover:text-green-600"
                     title="Save"
+                    disabled={currentValue.trim() === ""}
                 >
                     <Check className="h-5 w-5" />
                 </button>
@@ -53,8 +61,9 @@ export default function EditableRowData({
     }
 
     return (
-        <div className="flex items-center space-x-2">
-            <span>{author}</span>
+        <div className={`flex items-center space-x-2 ${className}`}>
+            {label && <span className="text-sm text-gray-500">{label}:</span>}
+            <span>{value}</span>
             <button
                 onClick={() => setIsEditing(true)}
                 className="text-blue-500 hover:text-blue-600"

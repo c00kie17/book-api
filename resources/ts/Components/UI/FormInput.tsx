@@ -1,15 +1,4 @@
-import { ChangeEvent } from "react";
-
-interface FormInputProps {
-    id: string;
-    label: string;
-    value: string;
-    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-    error?: string;
-    placeholder?: string;
-    type?: string;
-    className?: string;
-}
+import { FormInputProps } from "../../types/Components/UI/FormInput.ts";
 
 export default function FormInput({
     id,

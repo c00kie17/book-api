@@ -1,6 +1,8 @@
 import { BookRowProps } from "../types/Components/BookRow.ts";
+import { ButtonVariant } from "../types/Components/UI/Button.ts";
 
-import EditableRowData from "./EditableRowData";
+import Button from "./UI/Button.tsx";
+import TableRowField from "./UI/TableRowField.tsx";
 
 export default function BookRow({ book, bookService }: BookRowProps) {
     const handleDelete = () => {
@@ -11,18 +13,23 @@ export default function BookRow({ book, bookService }: BookRowProps) {
 
     return (
         <tr>
-            <td className="px-4 py-2 border-b">{book.id}</td>
-            <td className="px-4 py-2 border-b">{book.title}</td>
+            <TableRowField value={book.id.toString()} />
+            <TableRowField value={book.title} />
+            <TableRowField
+                value={book.author}
+                editable={true}
+                onUpdate={(newAuthor) =>
+                    bookService.updateBook(book.id, { author: newAuthor })
+                }
+            />
             <td className="px-4 py-2 border-b">
-                <EditableRowData book={book} bookService={bookService} />
-            </td>
-            <td className="px-4 py-2 border-b">
-                <button
+                <Button
+                    variant={ButtonVariant.DANGER}
                     onClick={handleDelete}
-                    className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded text-sm"
+                    className="py-1 px-3 text-sm"
                 >
                     Delete
-                </button>
+                </Button>
             </td>
         </tr>
     );

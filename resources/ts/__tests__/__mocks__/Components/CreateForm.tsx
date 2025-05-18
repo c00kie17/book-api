@@ -1,8 +1,8 @@
 import * as React from "react";
 
-import { BookFormProps } from "../../../types/Components/BookForm";
+import { CreateFormProps } from "../../../types/Components/CreateForm.ts";
 
-class BookFormMock extends React.Component<BookFormProps> {
+class BookFormMock extends React.Component<CreateFormProps> {
     render(): React.ReactNode {
         const { isOpen, onClose } = this.props;
 

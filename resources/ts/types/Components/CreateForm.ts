@@ -1,6 +1,6 @@
 import { IBookService } from "../../Services/IBookService";
 
-export type BookFormProps = {
+export type CreateFormProps = {
     isOpen: boolean;
     onClose: () => void;
     bookService: IBookService;

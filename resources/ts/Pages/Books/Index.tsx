@@ -1,12 +1,14 @@
 import { Head } from "@inertiajs/react";
 import { useState } from "react";
 
-import BookForm from "../../Components/BookForm.tsx";
 import BookList from "../../Components/BookList";
+import CreateForm from "../../Components/CreateForm.tsx";
 import ExportForm from "../../Components/ExportForm.tsx";
 import SearchBar from "../../Components/SearchBar.tsx";
+import Button from "../../Components/UI/Button.tsx";
 import BookService from "../../Services/BookService";
 import { IndexProps } from "../../types";
+import { ButtonVariant } from "../../types/Components/UI/Button.ts";
 import { SortDirection } from "../../types/Enums/SortDirection.ts";
 
 export default function Index({
@@ -47,18 +49,22 @@ export default function Index({
                                 onClear={handleClearSearch}
                             />
                         </div>
-                        <button
+                        <Button
+                            variant={ButtonVariant.PRIMARY}
                             onClick={() => setIsFormOpen(true)}
-                            className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg w-full sm:w-auto"
+                            fullWidth
+                            className="sm:w-auto"
                         >
                             Add New Book
-                        </button>
-                        <button
+                        </Button>
+                        <Button
+                            variant={ButtonVariant.SUCCESS}
                             onClick={() => setIsExportOpen(true)}
-                            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg w-full sm:w-auto"
+                            fullWidth
+                            className="sm:w-auto"
                         >
                             Export
-                        </button>
+                        </Button>
                     </div>
                 </div>
 
@@ -71,7 +77,7 @@ export default function Index({
                     bookService={bookService}
                 />
 
-                <BookForm
+                <CreateForm
                     isOpen={isFormOpen}
                     onClose={() => setIsFormOpen(false)}
                     bookService={bookService}
