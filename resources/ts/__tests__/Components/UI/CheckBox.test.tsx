@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import Checkbox from "../../../Components/UI/CheckBox.tsx";
 
+import Checkbox from "../../../Components/UI/CheckBox.tsx";
 
 describe("Checkbox Component", () => {
     const mockOnChange = jest.fn();
@@ -16,14 +16,13 @@ describe("Checkbox Component", () => {
                 label="Test Label"
                 checked={false}
                 onChange={mockOnChange}
-            />
+            />,
         );
 
         const checkbox = screen.getByRole("checkbox");
         expect(checkbox).toBeInTheDocument();
         expect(screen.getByText("Test Label")).toBeInTheDocument();
     });
-
 
     test("renders in unchecked state when checked is false", () => {
         render(
@@ -32,7 +31,7 @@ describe("Checkbox Component", () => {
                 label="Test Label"
                 checked={false}
                 onChange={mockOnChange}
-            />
+            />,
         );
 
         const checkbox = screen.getByRole("checkbox");
@@ -46,7 +45,7 @@ describe("Checkbox Component", () => {
                 label="Test Label"
                 checked={true}
                 onChange={mockOnChange}
-            />
+            />,
         );
 
         const checkbox = screen.getByRole("checkbox");
@@ -60,7 +59,7 @@ describe("Checkbox Component", () => {
                 label="Test Label"
                 checked={false}
                 onChange={mockOnChange}
-            />
+            />,
         );
 
         fireEvent.click(screen.getByRole("checkbox"));

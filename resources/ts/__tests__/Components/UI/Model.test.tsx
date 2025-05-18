@@ -1,9 +1,10 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+
 import Modal from "../../../Components/UI/Model";
-import {ButtonVariant} from "../../../types/Components/UI/Button.ts";
+import { ButtonVariant } from "../../../types/Components/UI/Button.ts";
 
 jest.mock("lucide-react", () => ({
-    X: () => <span data-testid="close-icon">×</span>
+    X: () => <span data-testid="close-icon">×</span>,
 }));
 
 jest.mock("../../../Components/UI/Button", () =>
@@ -28,7 +29,7 @@ describe("Modal Component", () => {
                 onPrimaryAction={mockOnPrimaryAction}
             >
                 <div>Modal content</div>
-            </Modal>
+            </Modal>,
         );
 
         expect(container.firstChild).toBeNull();
@@ -44,14 +45,18 @@ describe("Modal Component", () => {
                 onPrimaryAction={mockOnPrimaryAction}
             >
                 <div>Modal content</div>
-            </Modal>
+            </Modal>,
         );
 
         expect(screen.getByText("Test Modal")).toBeInTheDocument();
         expect(screen.getByText("Modal content")).toBeInTheDocument();
         expect(screen.getByTestId("close-icon")).toBeInTheDocument();
-        expect(screen.getByTestId(`button-${ButtonVariant.PRIMARY}`)).toBeInTheDocument();
-        expect(screen.getByTestId(`button-${ButtonVariant.SECONDARY}`)).toBeInTheDocument();
+        expect(
+            screen.getByTestId(`button-${ButtonVariant.PRIMARY}`),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByTestId(`button-${ButtonVariant.SECONDARY}`),
+        ).toBeInTheDocument();
     });
 
     test("calls onClose when X button is clicked", () => {
@@ -64,7 +69,7 @@ describe("Modal Component", () => {
                 onPrimaryAction={mockOnPrimaryAction}
             >
                 <div>Modal content</div>
-            </Modal>
+            </Modal>,
         );
 
         fireEvent.click(screen.getByLabelText("Close"));
@@ -81,7 +86,7 @@ describe("Modal Component", () => {
                 onPrimaryAction={mockOnPrimaryAction}
             >
                 <div>Modal content</div>
-            </Modal>
+            </Modal>,
         );
 
         fireEvent.click(screen.getByText("Cancel"));
@@ -98,13 +103,12 @@ describe("Modal Component", () => {
                 onPrimaryAction={mockOnPrimaryAction}
             >
                 <div>Modal content</div>
-            </Modal>
+            </Modal>,
         );
 
         fireEvent.click(screen.getByText("Submit"));
         expect(mockOnPrimaryAction).toHaveBeenCalledTimes(1);
     });
-
 
     test("disables primary button when isPrimaryActionDisabled is true", () => {
         render(
@@ -117,7 +121,7 @@ describe("Modal Component", () => {
                 isPrimaryActionDisabled={true}
             >
                 <div>Modal content</div>
-            </Modal>
+            </Modal>,
         );
 
         const primaryButton = screen.getByText("Submit");
@@ -135,7 +139,7 @@ describe("Modal Component", () => {
                 isProcessing={true}
             >
                 <div>Modal content</div>
-            </Modal>
+            </Modal>,
         );
 
         expect(screen.getByText("Processing...")).toBeInTheDocument();
@@ -153,7 +157,7 @@ describe("Modal Component", () => {
                 isProcessing={true}
             >
                 <div>Modal content</div>
-            </Modal>
+            </Modal>,
         );
 
         const primaryButton = screen.getByText("Processing...");

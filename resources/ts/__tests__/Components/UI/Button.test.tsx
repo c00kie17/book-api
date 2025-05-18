@@ -1,14 +1,15 @@
-
 import { render, screen, fireEvent } from "@testing-library/react";
-import {ButtonVariant} from "../../../types/Components/UI/Button.ts";
-import Button from "../../../Components/UI/Button.tsx";
 
+import Button from "../../../Components/UI/Button.tsx";
+import { ButtonVariant } from "../../../types/Components/UI/Button.ts";
 
 describe("Button Component", () => {
     test("renders with children content", () => {
         render(<Button>Click me</Button>);
 
-        expect(screen.getByRole("button", {name: "Click me"})).toBeInTheDocument();
+        expect(
+            screen.getByRole("button", { name: "Click me" }),
+        ).toBeInTheDocument();
     });
 
     test("applies primary variant styles by default", () => {
@@ -54,5 +55,4 @@ describe("Button Component", () => {
         fireEvent.click(screen.getByRole("button"));
         expect(handleClick).toHaveBeenCalledTimes(1);
     });
-
-})
+});

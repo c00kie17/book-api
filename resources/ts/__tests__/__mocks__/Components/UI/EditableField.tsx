@@ -1,5 +1,6 @@
 import * as React from "react";
-import {EditableFieldProps} from "../../../../types/Components/UI/EditableField.ts";
+
+import { EditableFieldProps } from "../../../../types/Components/UI/EditableField.ts";
 
 class EditableFieldMock extends React.Component<EditableFieldProps> {
     render(): React.ReactNode {

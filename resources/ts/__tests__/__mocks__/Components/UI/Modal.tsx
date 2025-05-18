@@ -1,6 +1,6 @@
-
 import * as React from "react";
-import {ModalProps} from "../../../../types/Components/UI/Model.ts";
+
+import { ModalProps } from "../../../../types/Components/UI/Model.ts";
 
 class ModalMock extends React.Component<ModalProps> {
     render(): React.ReactNode {
@@ -12,7 +12,7 @@ class ModalMock extends React.Component<ModalProps> {
             onPrimaryAction,
             isPrimaryActionDisabled,
             isProcessing,
-            children
+            children,
         } = this.props;
 
         if (!isOpen) return null;
@@ -30,10 +30,7 @@ class ModalMock extends React.Component<ModalProps> {
                 </div>
                 <div data-testid="modal-content">{children}</div>
                 <div data-testid="modal-actions">
-                    <button
-                        onClick={onClose}
-                        data-testid="modal-cancel"
-                    >
+                    <button onClick={onClose} data-testid="modal-cancel">
                         Cancel
                     </button>
                     <button

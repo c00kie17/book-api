@@ -1,5 +1,6 @@
 import * as React from "react";
-import {TableHeaderFieldProps} from "../../../../types/Components/UI/TableHeaderField.ts";
+
+import { TableHeaderFieldProps } from "../../../../types/Components/UI/TableHeaderField.ts";
 
 class TableHeaderFieldMock extends React.Component<TableHeaderFieldProps> {
     render(): React.ReactNode {
@@ -8,7 +9,7 @@ class TableHeaderFieldMock extends React.Component<TableHeaderFieldProps> {
             align = "left",
             sortable = false,
             sortKey,
-            children
+            children,
         } = this.props;
 
         return (

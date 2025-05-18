@@ -1,6 +1,6 @@
-
 import * as React from "react";
-import {RadioGroupProps} from "../../../../types/Components/UI/RadioGroup.ts";
+
+import { RadioGroupProps } from "../../../../types/Components/UI/RadioGroup.ts";
 
 class RadioGroupMock extends React.Component<RadioGroupProps> {
     render(): React.ReactNode {

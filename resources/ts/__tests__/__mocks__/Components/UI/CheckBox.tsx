@@ -1,5 +1,6 @@
 import * as React from "react";
-import {CheckBoxProps} from "../../../../types/Components/UI/CheckBox.ts";
+
+import { CheckBoxProps } from "../../../../types/Components/UI/CheckBox.ts";
 
 class CheckBoxMock extends React.Component<CheckBoxProps> {
     render(): React.ReactNode {

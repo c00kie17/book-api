@@ -1,7 +1,9 @@
-
-
 import * as React from "react";
-import {ButtonProps, ButtonVariant} from "../../../../types/Components/UI/Button.ts";
+
+import {
+    ButtonProps,
+    ButtonVariant,
+} from "../../../../types/Components/UI/Button.ts";
 
 class ButtonMock extends React.Component<ButtonProps> {
     render(): React.ReactNode {

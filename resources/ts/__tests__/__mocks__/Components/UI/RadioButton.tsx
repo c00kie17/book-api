@@ -1,5 +1,6 @@
 import * as React from "react";
-import {RadioButtonProps} from "../../../../types/Components/UI/RadioButtonProps.ts";
+
+import { RadioButtonProps } from "../../../../types/Components/UI/RadioButtonProps.ts";
 
 class RadioButtonMock extends React.Component<RadioButtonProps> {
     render(): React.ReactNode {

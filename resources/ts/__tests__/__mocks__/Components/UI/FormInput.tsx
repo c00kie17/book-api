@@ -1,9 +1,18 @@
 import * as React from "react";
-import {FormInputProps} from "../../../../types/Components/UI/FormInput.ts";
 
-class FormInputMock extends React.Component<FormInputProps>  {
+import { FormInputProps } from "../../../../types/Components/UI/FormInput.ts";
+
+class FormInputMock extends React.Component<FormInputProps> {
     render(): React.ReactNode {
-        const { id, label, value, onChange, error, placeholder, className = "" } = this.props;
+        const {
+            id,
+            label,
+            value,
+            onChange,
+            error,
+            placeholder,
+            className = "",
+        } = this.props;
 
         return (
             <div

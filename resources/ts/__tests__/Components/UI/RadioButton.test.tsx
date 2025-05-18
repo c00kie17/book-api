@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import RadioButton from "../../../Components/UI/RadioButton.tsx";
 
+import RadioButton from "../../../Components/UI/RadioButton.tsx";
 
 describe("RadioButton Component", () => {
     const mockOnChange = jest.fn();
@@ -18,13 +18,12 @@ describe("RadioButton Component", () => {
                 checked={false}
                 onChange={mockOnChange}
                 name="test-group"
-            />
+            />,
         );
 
         expect(screen.getByLabelText("Test Label")).toBeInTheDocument();
         expect(screen.getByText("Test Label")).toBeInTheDocument();
     });
-
 
     test("sets name attribute correctly", () => {
         render(
@@ -35,7 +34,7 @@ describe("RadioButton Component", () => {
                 checked={false}
                 onChange={mockOnChange}
                 name="test-group"
-            />
+            />,
         );
 
         const radio = screen.getByLabelText("Test Label");
@@ -51,7 +50,7 @@ describe("RadioButton Component", () => {
                 checked={false}
                 onChange={mockOnChange}
                 name="test-group"
-            />
+            />,
         );
 
         const radio = screen.getByLabelText("Test Label");
@@ -67,7 +66,7 @@ describe("RadioButton Component", () => {
                 checked={false}
                 onChange={mockOnChange}
                 name="test-group"
-            />
+            />,
         );
 
         const radio = screen.getByRole("radio");
@@ -83,7 +82,7 @@ describe("RadioButton Component", () => {
                 checked={true}
                 onChange={mockOnChange}
                 name="test-group"
-            />
+            />,
         );
 
         const radio = screen.getByRole("radio");
@@ -99,11 +98,10 @@ describe("RadioButton Component", () => {
                 checked={false}
                 onChange={mockOnChange}
                 name="test-group"
-            />
+            />,
         );
 
         fireEvent.click(screen.getByLabelText("Test Label"));
         expect(mockOnChange).toHaveBeenCalledTimes(1);
     });
-
 });

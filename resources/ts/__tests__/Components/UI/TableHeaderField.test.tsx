@@ -1,46 +1,48 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+
 import TableHeaderField from "../../../Components/UI/TableHeaderField.tsx";
-import {SortDirection} from "../../../types/Enums/SortDirection.ts";
+import { SortDirection } from "../../../types/Enums/SortDirection.ts";
 
 jest.mock("lucide-react", () => ({
     ArrowUp: () => <span data-testid="arrow-up">↑</span>,
-    ArrowDown: () => <span data-testid="arrow-down">↓</span>
+    ArrowDown: () => <span data-testid="arrow-down">↓</span>,
 }));
-
 
 jest.mock("../../../Components/UI/EditableField.tsx", () =>
     jest.requireActual("../../__mocks__/Components/UI/EditableField.tsx"),
 );
-
 
 describe("TableHeaderField Component", () => {
     test("renders with children content", () => {
         render(
             <table>
                 <thead>
-                <tr>
-                    <TableHeaderField>Header Text</TableHeaderField>
-                </tr>
+                    <tr>
+                        <TableHeaderField>Header Text</TableHeaderField>
+                    </tr>
                 </thead>
-            </table>
+            </table>,
         );
 
         expect(screen.getByText("Header Text")).toBeInTheDocument();
     });
 
-
     test("renders as plain header when not sortable", () => {
         render(
             <table>
                 <thead>
-                <tr>
-                    <TableHeaderField sortable={false}>Header Text</TableHeaderField>
-                </tr>
+                    <tr>
+                        <TableHeaderField sortable={false}>
+                            Header Text
+                        </TableHeaderField>
+                    </tr>
                 </thead>
-            </table>
+            </table>,
         );
 
-        expect(screen.queryByTestId("sort-header-undefined")).not.toBeInTheDocument();
+        expect(
+            screen.queryByTestId("sort-header-undefined"),
+        ).not.toBeInTheDocument();
         expect(screen.queryByRole("button")).not.toBeInTheDocument();
     });
 
@@ -50,19 +52,19 @@ describe("TableHeaderField Component", () => {
         render(
             <table>
                 <thead>
-                <tr>
-                    <TableHeaderField
-                        sortable={true}
-                        sortKey="name"
-                        currentSortKey="name"
-                        currentSortDirection={SortDirection.ASC}
-                        onSort={mockOnSort}
-                    >
-                        Header Text
-                    </TableHeaderField>
-                </tr>
+                    <tr>
+                        <TableHeaderField
+                            sortable={true}
+                            sortKey="name"
+                            currentSortKey="name"
+                            currentSortDirection={SortDirection.ASC}
+                            onSort={mockOnSort}
+                        >
+                            Header Text
+                        </TableHeaderField>
+                    </tr>
                 </thead>
-            </table>
+            </table>,
         );
 
         expect(screen.getByTestId("arrow-up")).toBeInTheDocument();
@@ -75,19 +77,19 @@ describe("TableHeaderField Component", () => {
         render(
             <table>
                 <thead>
-                <tr>
-                    <TableHeaderField
-                        sortable={true}
-                        sortKey="name"
-                        currentSortKey="name"
-                        currentSortDirection={SortDirection.DESC}
-                        onSort={mockOnSort}
-                    >
-                        Header Text
-                    </TableHeaderField>
-                </tr>
+                    <tr>
+                        <TableHeaderField
+                            sortable={true}
+                            sortKey="name"
+                            currentSortKey="name"
+                            currentSortDirection={SortDirection.DESC}
+                            onSort={mockOnSort}
+                        >
+                            Header Text
+                        </TableHeaderField>
+                    </tr>
                 </thead>
-            </table>
+            </table>,
         );
 
         expect(screen.getByTestId("arrow-down")).toBeInTheDocument();
@@ -100,18 +102,18 @@ describe("TableHeaderField Component", () => {
         render(
             <table>
                 <thead>
-                <tr>
-                    <TableHeaderField
-                        sortable={true}
-                        sortKey="name"
-                        currentSortKey="other"
-                        onSort={mockOnSort}
-                    >
-                        Header Text
-                    </TableHeaderField>
-                </tr>
+                    <tr>
+                        <TableHeaderField
+                            sortable={true}
+                            sortKey="name"
+                            currentSortKey="other"
+                            onSort={mockOnSort}
+                        >
+                            Header Text
+                        </TableHeaderField>
+                    </tr>
                 </thead>
-            </table>
+            </table>,
         );
 
         expect(screen.queryByTestId("arrow-up")).not.toBeInTheDocument();
@@ -124,18 +126,18 @@ describe("TableHeaderField Component", () => {
         render(
             <table>
                 <thead>
-                <tr>
-                    <TableHeaderField
-                        sortable={true}
-                        sortKey="name"
-                        currentSortKey="other"
-                        onSort={mockOnSort}
-                    >
-                        Header Text
-                    </TableHeaderField>
-                </tr>
+                    <tr>
+                        <TableHeaderField
+                            sortable={true}
+                            sortKey="name"
+                            currentSortKey="other"
+                            onSort={mockOnSort}
+                        >
+                            Header Text
+                        </TableHeaderField>
+                    </tr>
                 </thead>
-            </table>
+            </table>,
         );
 
         fireEvent.click(screen.getByTestId("sort-header-name"));
@@ -150,19 +152,19 @@ describe("TableHeaderField Component", () => {
         render(
             <table>
                 <thead>
-                <tr>
-                    <TableHeaderField
-                        sortable={true}
-                        sortKey="name"
-                        currentSortKey="name"
-                        currentSortDirection={SortDirection.ASC}
-                        onSort={mockOnSort}
-                    >
-                        Header Text
-                    </TableHeaderField>
-                </tr>
+                    <tr>
+                        <TableHeaderField
+                            sortable={true}
+                            sortKey="name"
+                            currentSortKey="name"
+                            currentSortDirection={SortDirection.ASC}
+                            onSort={mockOnSort}
+                        >
+                            Header Text
+                        </TableHeaderField>
+                    </tr>
                 </thead>
-            </table>
+            </table>,
         );
 
         fireEvent.click(screen.getByTestId("sort-header-name"));
@@ -170,5 +172,4 @@ describe("TableHeaderField Component", () => {
         expect(mockOnSort).toHaveBeenCalledTimes(1);
         expect(mockOnSort).toHaveBeenCalledWith("name", SortDirection.DESC);
     });
-
 });

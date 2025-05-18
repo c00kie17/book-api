@@ -1,5 +1,5 @@
-
 import { render, screen } from "@testing-library/react";
+
 import FormInput from "../../../Components/UI/FormInput.tsx";
 
 describe("FormInput Component", () => {
@@ -10,13 +10,12 @@ describe("FormInput Component", () => {
                 label="Test Label"
                 value=""
                 onChange={() => {}}
-            />
+            />,
         );
 
         expect(screen.getByLabelText("Test Label")).toBeInTheDocument();
         expect(screen.getByLabelText("Test Label").tagName).toBe("INPUT");
     });
-
 
     test("shows error message when provided", () => {
         render(
@@ -26,7 +25,7 @@ describe("FormInput Component", () => {
                 value=""
                 onChange={() => {}}
                 error="This field is required"
-            />
+            />,
         );
 
         expect(screen.getByText("This field is required")).toBeInTheDocument();
@@ -40,7 +39,7 @@ describe("FormInput Component", () => {
                 value=""
                 onChange={() => {}}
                 error="This field is required"
-            />
+            />,
         );
 
         const input = screen.getByLabelText("Test Label");
@@ -55,7 +54,7 @@ describe("FormInput Component", () => {
                 label="Test Label"
                 value=""
                 onChange={() => {}}
-            />
+            />,
         );
 
         const input = screen.getByLabelText("Test Label");
@@ -71,10 +70,12 @@ describe("FormInput Component", () => {
                 value=""
                 onChange={() => {}}
                 placeholder="Enter value here"
-            />
+            />,
         );
 
-        expect(screen.getByPlaceholderText("Enter value here")).toBeInTheDocument();
+        expect(
+            screen.getByPlaceholderText("Enter value here"),
+        ).toBeInTheDocument();
     });
 
     test("sets input type when provided", () => {
@@ -85,11 +86,10 @@ describe("FormInput Component", () => {
                 value=""
                 onChange={() => {}}
                 type="password"
-            />
+            />,
         );
 
         const input = screen.getByLabelText("Test Label");
         expect(input).toHaveAttribute("type", "password");
     });
-
 });

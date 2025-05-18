@@ -6,11 +6,11 @@ import { Book } from "../../types/Services/BookService";
 import { BookServiceMock } from "../__mocks__/Services/BookService";
 
 jest.mock("../../Components/BookRow.tsx", () =>
-    jest.requireActual("../__mocks__/Components/BookRow.tsx")
+    jest.requireActual("../__mocks__/Components/BookRow.tsx"),
 );
 
 jest.mock("../../Components/UI/TableHeaderField.tsx", () =>
-    jest.requireActual("../__mocks__/Components/UI/TableHeaderField.tsx")
+    jest.requireActual("../__mocks__/Components/UI/TableHeaderField.tsx"),
 );
 
 describe("BookList Component", () => {
@@ -35,14 +35,13 @@ describe("BookList Component", () => {
                 sortDirection={SortDirection.DESC}
                 searchTerm=""
                 onSort={mockOnSort}
-            />
+            />,
         );
 
         expect(screen.getByText("ID")).toBeInTheDocument();
         expect(screen.getByText("Title")).toBeInTheDocument();
         expect(screen.getByText("Author")).toBeInTheDocument();
         expect(screen.getByText("Actions")).toBeInTheDocument();
-
 
         expect(screen.getAllByTestId(/^book-row-/)).toHaveLength(2);
 
@@ -59,7 +58,7 @@ describe("BookList Component", () => {
                 sortDirection={SortDirection.DESC}
                 searchTerm=""
                 onSort={mockOnSort}
-            />
+            />,
         );
 
         expect(screen.getByText("No books found")).toBeInTheDocument();
@@ -74,10 +73,11 @@ describe("BookList Component", () => {
                 sortDirection={SortDirection.DESC}
                 searchTerm="test query"
                 onSort={mockOnSort}
-            />
+            />,
         );
 
-        expect(screen.getByText("No books match your search")).toBeInTheDocument();
+        expect(
+            screen.getByText("No books match your search"),
+        ).toBeInTheDocument();
     });
-
 });

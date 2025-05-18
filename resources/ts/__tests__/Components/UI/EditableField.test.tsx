@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+
 import EditableField from "../../../Components/UI/EditableField.tsx";
 
 jest.mock("lucide-react", () => ({
@@ -15,12 +16,7 @@ describe("EditableField Component", () => {
     });
 
     test("renders in view mode by default", () => {
-        render(
-            <EditableField
-                value="Initial Value"
-                onUpdate={mockOnUpdate}
-            />
-        );
+        render(<EditableField value="Initial Value" onUpdate={mockOnUpdate} />);
 
         expect(screen.getByText("Initial Value")).toBeInTheDocument();
         expect(screen.getByTestId("pencil-icon")).toBeInTheDocument();
@@ -34,7 +30,7 @@ describe("EditableField Component", () => {
                 value="Initial Value"
                 onUpdate={mockOnUpdate}
                 label="Test Label"
-            />
+            />,
         );
 
         expect(screen.getByText("Test Label:")).toBeInTheDocument();
@@ -42,12 +38,7 @@ describe("EditableField Component", () => {
     });
 
     test("switches to edit mode when edit button is clicked", () => {
-        render(
-            <EditableField
-                value="Initial Value"
-                onUpdate={mockOnUpdate}
-            />
-        );
+        render(<EditableField value="Initial Value" onUpdate={mockOnUpdate} />);
 
         fireEvent.click(screen.getByTitle("Edit"));
 
@@ -59,12 +50,7 @@ describe("EditableField Component", () => {
     });
 
     test("updates input value when typing", () => {
-        render(
-            <EditableField
-                value="Initial Value"
-                onUpdate={mockOnUpdate}
-            />
-        );
+        render(<EditableField value="Initial Value" onUpdate={mockOnUpdate} />);
 
         fireEvent.click(screen.getByTitle("Edit"));
 
@@ -75,12 +61,7 @@ describe("EditableField Component", () => {
     });
 
     test("calls onUpdate with new value when save button is clicked", () => {
-        render(
-            <EditableField
-                value="Initial Value"
-                onUpdate={mockOnUpdate}
-            />
-        );
+        render(<EditableField value="Initial Value" onUpdate={mockOnUpdate} />);
 
         fireEvent.click(screen.getByTitle("Edit"));
 
@@ -94,12 +75,7 @@ describe("EditableField Component", () => {
     });
 
     test("reverts to original value when cancel button is clicked", () => {
-        render(
-            <EditableField
-                value="Initial Value"
-                onUpdate={mockOnUpdate}
-            />
-        );
+        render(<EditableField value="Initial Value" onUpdate={mockOnUpdate} />);
 
         fireEvent.click(screen.getByTitle("Edit"));
 
@@ -113,12 +89,7 @@ describe("EditableField Component", () => {
     });
 
     test("prevents saving empty values", () => {
-        render(
-            <EditableField
-                value="Initial Value"
-                onUpdate={mockOnUpdate}
-            />
-        );
+        render(<EditableField value="Initial Value" onUpdate={mockOnUpdate} />);
 
         fireEvent.click(screen.getByTitle("Edit"));
 
@@ -133,12 +104,7 @@ describe("EditableField Component", () => {
     });
 
     test("handles whitespace-only values as empty", () => {
-        render(
-            <EditableField
-                value="Initial Value"
-                onUpdate={mockOnUpdate}
-            />
-        );
+        render(<EditableField value="Initial Value" onUpdate={mockOnUpdate} />);
 
         fireEvent.click(screen.getByTitle("Edit"));
 
@@ -148,5 +114,4 @@ describe("EditableField Component", () => {
         const saveButton = screen.getByTitle("Save");
         expect(saveButton).toBeDisabled();
     });
-
 });

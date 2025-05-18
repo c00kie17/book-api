@@ -1,18 +1,18 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+
 import BookRow from "../../Components/BookRow";
 import { BookServiceMock } from "../__mocks__/Services/BookService";
 
-
 jest.mock("../../Components/UI/TableRowField.tsx", () =>
-    jest.requireActual("../__mocks__/Components/UI/TableRowField.tsx")
+    jest.requireActual("../__mocks__/Components/UI/TableRowField.tsx"),
 );
 
 jest.mock("../../Components/UI/Button.tsx", () =>
-    jest.requireActual("../__mocks__/Components/UI/Button.tsx")
+    jest.requireActual("../__mocks__/Components/UI/Button.tsx"),
 );
 
 const originalConfirm = window.confirm;
-let confirmMock = jest.fn(() => true);
+const confirmMock = jest.fn(() => true);
 
 describe("BookRow Component", () => {
     const bookServiceMock = new BookServiceMock();
@@ -35,22 +35,22 @@ describe("BookRow Component", () => {
         render(
             <table>
                 <tbody>
-                <BookRow book={mockBook} bookService={bookServiceMock} />
+                    <BookRow book={mockBook} bookService={bookServiceMock} />
                 </tbody>
-            </table>
+            </table>,
         );
 
         expect(screen.getByTestId("table-row-field-id")).toHaveAttribute(
             "data-value",
-            "1"
+            "1",
         );
         expect(screen.getByTestId("table-row-field-title")).toHaveAttribute(
             "data-value",
-            "Test Book"
+            "Test Book",
         );
         expect(screen.getByTestId("table-row-field-author")).toHaveAttribute(
             "data-value",
-            "Test Author"
+            "Test Author",
         );
 
         expect(screen.getByTestId("button-danger")).toBeInTheDocument();
@@ -61,18 +61,17 @@ describe("BookRow Component", () => {
         render(
             <table>
                 <tbody>
-                <BookRow book={mockBook} bookService={bookServiceMock} />
+                    <BookRow book={mockBook} bookService={bookServiceMock} />
                 </tbody>
-            </table>
+            </table>,
         );
 
         fireEvent.click(screen.getByText("Delete"));
 
-        expect(confirmMock).toHaveBeenCalledWith('Are you sure you want to delete "Test Book"?');
-
+        expect(confirmMock).toHaveBeenCalledWith(
+            'Are you sure you want to delete "Test Book"?',
+        );
 
         expect(bookServiceMock.deleteBook).toHaveBeenCalledWith(1);
     });
-
-
 });

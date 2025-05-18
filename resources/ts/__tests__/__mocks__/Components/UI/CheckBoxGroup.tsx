@@ -1,6 +1,6 @@
-
 import * as React from "react";
-import {CheckBoxGroupProps} from "../../../../types/Components/UI/CheckBoxGroup.ts";
+
+import { CheckBoxGroupProps } from "../../../../types/Components/UI/CheckBoxGroup.ts";
 
 class CheckBoxGroupMock extends React.Component<CheckBoxGroupProps> {
     render(): React.ReactNode {
