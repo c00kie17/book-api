@@ -7,7 +7,10 @@ use App\Services\BookService;
 use Mockery;
 use Tests\TestCase;
 
-abstract class BaseTest extends TestCase
+/**
+ * @abstract
+ */
+class BaseTestCase extends TestCase
 {
     protected BookService $bookService;
 

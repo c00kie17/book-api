@@ -69,8 +69,18 @@ jobs:
           php-version: '8.2'
           extensions: mbstring, dom, fileinfo, mysql
           coverage: xdebug
+      - name: Setup Node.ts
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install dependencies
+      - name: Install node dependencies
+        run: npm ci
+
+      - name: Build node
+        run: npm run build
+
+      - name: Install php dependencies
         run: composer install --prefer-dist --no-progress
 
       - name: Create .env file

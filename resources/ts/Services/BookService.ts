@@ -1,5 +1,8 @@
 import { router } from "@inertiajs/react";
+import axios from "axios";
+import { saveAs } from "file-saver";
 
+import { ExportFormat } from "../types/Enums/ExportFormat.ts";
 import { SortDirection } from "../types/Enums/SortDirection.ts";
 import {
     BookData,
@@ -16,6 +19,7 @@ export default class BookService implements IBookService {
         this.ENDPOINTS = {
             BOOKS: "/books",
             BOOK_BY_ID: (id: number) => `/books/${id}`,
+            BOOKS_EXPORT: "/books/export",
         };
     }
 
@@ -105,6 +109,42 @@ export default class BookService implements IBookService {
             "get",
             `${this.ENDPOINTS.BOOKS}?${params.toString()}`,
             {},
+            onSuccess,
+            onError,
+        );
+    }
+
+    private async handleFileDownload(
+        url: string,
+        format: ExportFormat,
+        onSuccess?: () => void,
+        onError?: (error: unknown) => void,
+    ): Promise<void> {
+        try {
+            const response = await axios.get(url, { responseType: "blob" });
+            const defaultFilename = `books_export.${format.toString()}`;
+            saveAs(new Blob([response.data]), defaultFilename);
+            if (onSuccess) onSuccess();
+        } catch (error) {
+            if (onError) onError(error);
+        }
+    }
+
+    async exportBooks(
+        format: ExportFormat,
+        fields: string[],
+        onSuccess?: () => void,
+        onError?: (error: unknown) => void,
+    ): Promise<void> {
+        if (fields.length === 0) return;
+
+        const params = new URLSearchParams();
+        params.append("file_format", format.toString());
+        fields.forEach((field) => params.append("fields[]", field));
+
+        return this.handleFileDownload(
+            `${this.ENDPOINTS.BOOKS_EXPORT}?${params.toString()}`,
+            format,
             onSuccess,
             onError,
         );

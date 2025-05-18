@@ -7,7 +7,7 @@ use App\Models\Book;
 use Illuminate\Database\Eloquent\Collection;
 use PHPUnit\Framework\Attributes\Test;
 
-class BookServiceGetAllTest extends BaseTest
+class GetAllTest extends BaseTestCase
 {
     #[Test]
     public function get_get_all_books_returns_all_books_from_repository()

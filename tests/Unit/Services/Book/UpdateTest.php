@@ -6,7 +6,7 @@ use App\Models\Book;
 use Exception;
 use PHPUnit\Framework\Attributes\Test;
 
-class BookServiceUpdateTest extends BaseTest
+class UpdateTest extends BaseTestCase
 {
     #[Test]
     public function update_author_with_valid_id_updates_author_successfully()

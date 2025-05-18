@@ -34,13 +34,26 @@ export class BookServiceMock implements IBookService {
         },
     );
 
-    getAllBooks(
-        _field: string,
-        _direction: SortDirection,
-        _searchTerm?: string,
-        onSuccess?: () => void,
-        _onError?: (errors: unknown) => void,
-    ) {
-        if (onSuccess) onSuccess();
-    }
+    getAllBooks = jest.fn(
+        (
+            _field: string,
+            _direction: SortDirection,
+            _searchTerm?: string,
+            onSuccess?: () => void,
+            _onError?: (errors: unknown) => void,
+        ) => {
+            if (onSuccess) onSuccess();
+        },
+    );
+
+    exportBooks = jest.fn(
+        (
+            _format: string,
+            _fields: string[],
+            onSuccess?: () => void,
+            _onError?: (error: unknown) => void,
+        ) => {
+            if (onSuccess) onSuccess();
+        },
+    );
 }

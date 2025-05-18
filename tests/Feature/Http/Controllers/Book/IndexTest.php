@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Http\Book\Controllers;
+namespace Tests\Feature\Http\Controllers\Book;
 
 use App\Models\Book;
 use App\Services\BookService;
@@ -9,7 +9,7 @@ use Inertia\Testing\AssertableInertia as Assert;
 use Mockery;
 use Tests\TestCase;
 
-class BookControllerIndexTest extends TestCase
+class IndexTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -17,9 +17,9 @@ class BookControllerIndexTest extends TestCase
     {
         parent::setUp();
 
-        Book::create(['title' => 'Z Book', 'author' => 'A Author']);
-        Book::create(['title' => 'A Book', 'author' => 'Z Author']);
-        Book::create(['title' => 'M Book', 'author' => 'M Author']);
+        Book::factory()->create(['title' => 'Z Book', 'author' => 'A Author']);
+        Book::factory()->create(['title' => 'A Book', 'author' => 'Z Author']);
+        Book::factory()->create(['title' => 'M Book', 'author' => 'M Author']);
     }
 
     public function test_index_handles_no_parameters(): void

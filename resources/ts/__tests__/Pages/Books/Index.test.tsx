@@ -24,7 +24,7 @@ jest.mock("@inertiajs/react", () => ({
     ),
 }));
 
-jest.mock("../../../Components/BookForm", () =>
+jest.mock("../../../Components/BookForm.tsx", () =>
     jest.requireActual("../../__mocks__/Components/BookForm.tsx"),
 );
 
@@ -36,8 +36,12 @@ jest.mock("../../../Components/SortableTableHeader", () =>
     jest.requireActual("../../__mocks__/Components/SortableTableHeader.tsx"),
 );
 
-jest.mock("../../../Components/SearchBar.tsx", () =>
+jest.mock("../../../Components/SearchBar", () =>
     jest.requireActual("../../__mocks__/Components/SearchBar.tsx"),
+);
+
+jest.mock("../../../Components/ExportForm", () =>
+    jest.requireActual("../../__mocks__/Components/ExportForm.tsx"),
 );
 
 describe("Index Page Component", () => {
@@ -88,5 +92,26 @@ describe("Index Page Component", () => {
 
         fireEvent.click(screen.getByText("Cancel"));
         expect(screen.queryByTestId("book-form")).not.toBeInTheDocument();
+    });
+
+    test("opens export form when Export button is clicked", () => {
+        render(<Index books={mockBooks} />);
+
+        expect(screen.queryByTestId("export-form")).not.toBeInTheDocument();
+
+        fireEvent.click(screen.getByText("Export"));
+
+        expect(screen.getByTestId("export-form")).toBeInTheDocument();
+    });
+
+    test("closes export form when form is closed", () => {
+        render(<Index books={mockBooks} />);
+
+        fireEvent.click(screen.getByText("Export"));
+        expect(screen.getByTestId("export-form")).toBeInTheDocument();
+
+        fireEvent.click(screen.getByText("Cancel"));
+
+        expect(screen.queryByTestId("export-form")).not.toBeInTheDocument();
     });
 });

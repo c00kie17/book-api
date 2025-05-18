@@ -1,8 +1,9 @@
 import { Head } from "@inertiajs/react";
 import { useState } from "react";
 
-import BookForm from "../../Components/BookForm";
+import BookForm from "../../Components/BookForm.tsx";
 import BookList from "../../Components/BookList";
+import ExportForm from "../../Components/ExportForm.tsx";
 import SearchBar from "../../Components/SearchBar.tsx";
 import BookService from "../../Services/BookService";
 import { IndexProps } from "../../types";
@@ -15,6 +16,7 @@ export default function Index({
     searchTerm,
 }: IndexProps) {
     const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
+    const [isExportOpen, setIsExportOpen] = useState<boolean>(false);
     const bookService = new BookService();
 
     const handleSearch = (term: string) => {
@@ -51,6 +53,12 @@ export default function Index({
                         >
                             Add New Book
                         </button>
+                        <button
+                            onClick={() => setIsExportOpen(true)}
+                            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg w-full sm:w-auto"
+                        >
+                            Export
+                        </button>
                     </div>
                 </div>
 
@@ -66,6 +74,12 @@ export default function Index({
                 <BookForm
                     isOpen={isFormOpen}
                     onClose={() => setIsFormOpen(false)}
+                    bookService={bookService}
+                />
+
+                <ExportForm
+                    isOpen={isExportOpen}
+                    onClose={() => setIsExportOpen(false)}
                     bookService={bookService}
                 />
             </div>

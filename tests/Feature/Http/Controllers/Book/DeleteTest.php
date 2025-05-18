@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Http\Book\Controllers;
+namespace Tests\Feature\Http\Controllers\Book;
 
 use App\Exceptions\BookDeletionException;
 use App\Models\Book;
@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\Traits\TestHelperTrait;
 
-class BookControllerDeleteTest extends TestCase
+class DeleteTest extends TestCase
 {
     use RefreshDatabase;
     use TestHelperTrait;

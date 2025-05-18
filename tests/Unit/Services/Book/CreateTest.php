@@ -6,7 +6,7 @@ use App\Models\Book;
 use Exception;
 use PHPUnit\Framework\Attributes\Test;
 
-class BookServiceCreateTest extends BaseTest
+class CreateTest extends BaseTestCase
 {
     #[Test]
     public function create_book_delegates_creation_to_repository()

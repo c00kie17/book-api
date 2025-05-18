@@ -8,7 +8,7 @@ use Throwable;
 class BookDeletionException extends Exception
 {
     /**
-     * Delete a  book deletion exception instance.
+     * Create a book deletion exception instance.
      *
      * @param  string  $message  The exception message
      * @param  int  $code  The exception code

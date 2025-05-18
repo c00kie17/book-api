@@ -3,17 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BookCreateRequest;
+use App\Http\Requests\BookExportRequest;
 use App\Http\Requests\BookIndexRequest;
 use App\Http\Requests\BookUpdateRequest;
 use App\Models\Book;
 use App\Services\BookService;
+use App\Traits\Controllers\FileDownloadTrait;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class BookController extends Controller
 {
+    use FileDownloadTrait;
+
     public function __construct(
         protected BookService $bookService,
     ) {}
@@ -84,5 +89,28 @@ class BookController extends Controller
             return to_route('books.index')
                 ->with('error', 'Failed to update book: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Export books data in CSV or XML format.
+     */
+    public function export(BookExportRequest $request): StreamedResponse
+    {
+        $format = $request->getFileFormat();
+        $fields = $request->getFields();
+
+        $exportService = app($format->value);
+
+        $books = $this->bookService->getAll();
+
+        $filename = 'books_export.' . $exportService->getFileExtension();
+
+        $content = $exportService->format($books, $fields);
+
+        return $this->downloadResponse(
+            $content,
+            $filename,
+            $exportService->getMimeType(),
+        );
     }
 }

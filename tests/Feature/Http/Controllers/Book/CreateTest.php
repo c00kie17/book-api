@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\Feature\Http\Book\Controllers;
+namespace Tests\Feature\Http\Controllers\Book;
 
 use App\Exceptions\BookCreationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\Traits\TestHelperTrait;
 
-class BookControllerCreateTest extends TestCase
+class CreateTest extends TestCase
 {
     use RefreshDatabase;
     use TestHelperTrait;

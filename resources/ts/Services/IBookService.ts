@@ -55,4 +55,18 @@ export interface IBookService {
         onSuccess?: () => void,
         onError?: (errors: unknown) => void,
     ): void;
+
+    /**
+     * Export books data
+     * @param format The export format (csv or xml)
+     * @param fields The fields to export
+     * @param onSuccess Optional callback to execute on successful sort
+     * @param onError Optional callback to execute on error
+     */
+    exportBooks(
+        format: string,
+        fields: string[],
+        onSuccess?: () => void,
+        onError?: (error: unknown) => void,
+    ): void;
 }
