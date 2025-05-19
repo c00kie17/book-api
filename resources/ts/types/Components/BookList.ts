@@ -9,4 +9,6 @@ export type BookListProps = {
     sortDirection?: SortDirection;
     searchTerm?: string;
     onSort: (field: string, direction: SortDirection) => void;
+    onBookDeleted?: () => void;
+    onBookUpdated?: () => void;
 };

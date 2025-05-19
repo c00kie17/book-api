@@ -10,7 +10,7 @@ export interface IBookService {
      */
     createBook(
         data: BookData,
-        onSuccess?: () => void,
+        onSuccess?: (createdBook: Book) => void,
         onError?: (errors: unknown) => void,
     ): void;
 
@@ -52,7 +52,7 @@ export interface IBookService {
         field: string,
         direction: SortDirection,
         searchTerm?: string,
-        onSuccess?: () => void,
+        onSuccess?: (data: Book[]) => void,
         onError?: (errors: unknown) => void,
     ): void;
 

@@ -16,9 +16,13 @@ class DeleteTest extends TestCase
     public function test_destroy_deletes_book_with_valid_id()
     {
         $book = Book::factory()->create();
-        $response = $this->delete(route('books.destroy', $book->id));
 
-        $this->assertSuccessResponse($response, 'books.index', 'Book deleted successfully');
+        $response = $this->deleteJson(route('books.destroy', $book->id));
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'message' => 'Book deleted successfully',
+        ]);
 
         $this->assertDatabaseMissing('books', ['id' => $book->id]);
     }
@@ -39,10 +43,16 @@ class DeleteTest extends TestCase
             'Failed to delete book: Database error',
         );
 
-        $response = $this->delete(route('books.destroy', $book->id));
+        $response = $this->deleteJson(route('books.destroy', ['book' => $book->id]));
 
-        $response->assertRedirect(route('books.index'));
-        $response->assertSessionHas('error');
+        $response->assertStatus(500);
+
+        $response->assertJson([
+            'message' => 'Failed to delete book: Failed to delete book: Database error',
+            'errors' => [
+                'general' => 'Failed to delete book: Database error',
+            ],
+        ]);
 
         $this->assertDatabaseHas('books', [
             'id' => $book->id,

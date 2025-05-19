@@ -12,9 +12,18 @@ import "../css/app.css";
                     default: React.ComponentType<unknown>;
                 }>("./Pages/**/*.{jsx,tsx}", { eager: true });
 
-                return (
-                    pages[`./Pages/${name}.jsx`] || pages[`./Pages/${name}.tsx`]
-                );
+                const component =
+                    pages[`./Pages/${name}.jsx`] ||
+                    pages[`./Pages/${name}.tsx`];
+
+                if (!component) {
+                    console.error("Available pages:", Object.keys(pages));
+                    console.error(
+                        `Page not found: ./Pages/${name}.tsx or ./Pages/${name}.jsx`,
+                    );
+                }
+
+                return component;
             },
             setup({ el, App, props }) {
                 if (el instanceof HTMLElement) {

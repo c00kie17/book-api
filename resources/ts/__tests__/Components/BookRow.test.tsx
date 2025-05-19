@@ -21,6 +21,8 @@ describe("BookRow Component", () => {
         title: "Test Book",
         author: "Test Author",
     };
+    const mockOnDeleted = jest.fn();
+    const mockOnUpdated = jest.fn();
 
     beforeEach(() => {
         jest.clearAllMocks();
@@ -57,11 +59,16 @@ describe("BookRow Component", () => {
         expect(screen.getByText("Delete")).toBeInTheDocument();
     });
 
-    test("calls deleteBook when delete button is clicked and confirmed", () => {
+    test("calls deleteBook when delete button is clicked and confirmed", async () => {
         render(
             <table>
                 <tbody>
-                    <BookRow book={mockBook} bookService={bookServiceMock} />
+                    <BookRow
+                        book={mockBook}
+                        bookService={bookServiceMock}
+                        onDeleted={mockOnDeleted}
+                        onUpdated={mockOnUpdated}
+                    />
                 </tbody>
             </table>,
         );
@@ -72,6 +79,12 @@ describe("BookRow Component", () => {
             'Are you sure you want to delete "Test Book"?',
         );
 
-        expect(bookServiceMock.deleteBook).toHaveBeenCalledWith(1);
+        expect(bookServiceMock.deleteBook).toHaveBeenCalled();
+
+        expect(bookServiceMock.deleteBook.mock.calls[0][0]).toBe(1);
+
+        await new Promise(process.nextTick);
+
+        expect(mockOnDeleted).toHaveBeenCalled();
     });
 });

@@ -1,36 +1,74 @@
 import { Head } from "@inertiajs/react";
-import { useState } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 
+import API_CONFIG from "../../../config.ts";
 import BookList from "../../Components/BookList";
 import CreateForm from "../../Components/CreateForm.tsx";
 import ExportForm from "../../Components/ExportForm.tsx";
 import SearchBar from "../../Components/SearchBar.tsx";
 import Button from "../../Components/UI/Button.tsx";
 import BookService from "../../Services/BookService";
-import { IndexProps } from "../../types";
 import { ButtonVariant } from "../../types/Components/UI/Button.ts";
 import { SortDirection } from "../../types/Enums/SortDirection.ts";
+import { Book } from "../../types/Services/BookService.ts";
 
-export default function Index({
-    books,
-    sortBy,
-    sortDirection,
-    searchTerm,
-}: IndexProps) {
+export default function Index() {
+    const [books, setBooks] = useState<Book[]>([]);
+    const [sortBy, setSortBy] = useState<string>("id");
+    const [sortDirection, setSortDirection] = useState<SortDirection>(
+        SortDirection.DESC,
+    );
+    const [searchTerm, setSearchTerm] = useState<string>("");
     const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
     const [isExportOpen, setIsExportOpen] = useState<boolean>(false);
-    const bookService = new BookService();
+    const [_isLoading, setIsLoading] = useState<boolean>(true);
+    const bookService = useMemo(() => new BookService(API_CONFIG.BASE_URL), []);
+
+    const fetchBooks = useCallback(() => {
+        setIsLoading(true);
+        bookService.getAllBooks(
+            sortBy,
+            sortDirection,
+            searchTerm,
+            (response) => {
+                setBooks(response);
+                setIsLoading(false);
+            },
+            (error) => {
+                console.error("Error fetching books:", error);
+                setIsLoading(false);
+            },
+        );
+    }, [sortBy, sortDirection, searchTerm, bookService]);
+
+    useEffect(() => {
+        fetchBooks();
+    }, [fetchBooks]);
 
     const handleSearch = (term: string) => {
-        bookService.getAllBooks(sortBy, sortDirection, term);
+        setSearchTerm(term);
     };
 
     const handleClearSearch = () => {
-        bookService.getAllBooks(sortBy, sortDirection);
+        setSearchTerm("");
     };
 
     const handleSort = (field: string, direction: SortDirection) => {
-        bookService.getAllBooks(field, direction);
+        setSortBy(field);
+        setSortDirection(direction);
+    };
+
+    const handleBookCreated = () => {
+        setIsFormOpen(false);
+        fetchBooks();
+    };
+
+    const handleBookDeleted = () => {
+        fetchBooks();
+    };
+
+    const handleBookUpdated = () => {
+        fetchBooks();
     };
 
     return (
@@ -75,12 +113,15 @@ export default function Index({
                     searchTerm={searchTerm}
                     onSort={handleSort}
                     bookService={bookService}
+                    onBookDeleted={handleBookDeleted}
+                    onBookUpdated={handleBookUpdated}
                 />
 
                 <CreateForm
                     isOpen={isFormOpen}
                     onClose={() => setIsFormOpen(false)}
                     bookService={bookService}
+                    onBookCreated={handleBookCreated}
                 />
 
                 <ExportForm

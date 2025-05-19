@@ -19,9 +19,9 @@ class CreateTest extends TestCase
             'author' => 'New Test Author',
         ];
 
-        $response = $this->post(route('books.store'), $bookData);
+        $response = $this->postJson(route('books.store'), $bookData);
 
-        $this->assertSuccessResponse($response, 'books.index', 'Book created successfully');
+        $response->assertStatus(200);
 
         $this->assertDatabaseHas('books', $bookData);
     }
@@ -67,10 +67,16 @@ class CreateTest extends TestCase
             'title' => 'Error Test Book',
             'author' => 'Error Test Author',
         ];
-        $response = $this->post(route('books.store'), $bookData);
+        $response = $this->postJson(route('books.store'), $bookData);
 
-        $redirectResponse = $this->followRedirects($response);
-        $redirectResponse->assertSee('An error occurred while saving the book');
+        $response->assertStatus(500);
+
+        $response->assertJson([
+            'message' => 'Failed to create book: Failed to create book: Database error',
+            'errors' => [
+                'general' => 'Failed to create book: Database error',
+            ],
+        ]);
 
         $this->assertDatabaseMissing('books', $bookData);
     }

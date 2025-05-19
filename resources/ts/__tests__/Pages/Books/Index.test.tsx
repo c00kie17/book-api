@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 
 import Index from "../../../Pages/Books/Index";
+import { SortDirection } from "../../../types/Enums/SortDirection.ts";
 import { Book } from "../../../types/Services/BookService.js";
 
 jest.mock("@inertiajs/react", () => ({
@@ -44,6 +45,29 @@ jest.mock("../../../Components/ExportForm", () =>
     jest.requireActual("../../__mocks__/Components/ExportForm.tsx"),
 );
 
+jest.mock("../../../Services/BookService", () => {
+    const { BookServiceMock } = jest.requireActual(
+        "../../__mocks__/Services/BookService",
+    );
+    const mockInstance = new BookServiceMock();
+    mockInstance.getAllBooks.mockImplementation(
+        (
+            _field: string,
+            _direction: SortDirection,
+            _searchTerm: string,
+            onSuccess?: (data: Book[]) => void,
+        ) => {
+            if (onSuccess) {
+                onSuccess([
+                    { id: 1, title: "Book 1", author: "Author 1" },
+                    { id: 2, title: "Book 2", author: "Author 2" },
+                ]);
+            }
+        },
+    );
+    return jest.fn(() => mockInstance);
+});
+
 describe("Index Page Component", () => {
     const mockBooks: Book[] = [
         { id: 1, title: "Book 1", author: "Author 1" },
@@ -55,7 +79,7 @@ describe("Index Page Component", () => {
     });
 
     test("renders book list with provided books", () => {
-        render(<Index books={mockBooks} />);
+        render(<Index />);
 
         const bookList = screen.getByTestId("book-list");
         expect(bookList).toBeInTheDocument();
@@ -65,7 +89,7 @@ describe("Index Page Component", () => {
     });
 
     test("renders search bar", () => {
-        render(<Index books={mockBooks} />);
+        render(<Index />);
 
         const searchBar = screen.getByTestId("search-bar");
         expect(searchBar).toBeInTheDocument();
@@ -75,7 +99,7 @@ describe("Index Page Component", () => {
     });
 
     test("opens book form when Add New Book button is clicked", () => {
-        render(<Index books={mockBooks} />);
+        render(<Index />);
 
         expect(screen.queryByTestId("book-form")).not.toBeInTheDocument();
 
@@ -85,7 +109,7 @@ describe("Index Page Component", () => {
     });
 
     test("closes book form when form is closed", () => {
-        render(<Index books={mockBooks} />);
+        render(<Index />);
 
         fireEvent.click(screen.getByText("Add New Book"));
         expect(screen.getByTestId("book-form")).toBeInTheDocument();
@@ -95,7 +119,7 @@ describe("Index Page Component", () => {
     });
 
     test("opens export form when Export button is clicked", () => {
-        render(<Index books={mockBooks} />);
+        render(<Index />);
 
         expect(screen.queryByTestId("export-form")).not.toBeInTheDocument();
 
@@ -105,7 +129,7 @@ describe("Index Page Component", () => {
     });
 
     test("closes export form when form is closed", () => {
-        render(<Index books={mockBooks} />);
+        render(<Index />);
 
         fireEvent.click(screen.getByText("Export"));
         expect(screen.getByTestId("export-form")).toBeInTheDocument();

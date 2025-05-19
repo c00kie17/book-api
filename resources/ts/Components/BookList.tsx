@@ -12,6 +12,8 @@ export default function BookList({
     sortDirection,
     searchTerm,
     onSort,
+    onBookDeleted,
+    onBookUpdated,
 }: BookListProps) {
     const handleSort = (field: string, direction: SortDirection) => {
         onSort(field, direction);
@@ -53,6 +55,8 @@ export default function BookList({
                                 key={book.id}
                                 book={book}
                                 bookService={bookService}
+                                onDeleted={onBookDeleted}
+                                onUpdated={onBookUpdated}
                             />
                         ))
                     ) : (

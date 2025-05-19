@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\BookCreationException;
 use App\Http\Requests\BookCreateRequest;
 use App\Http\Requests\BookExportRequest;
-use App\Http\Requests\BookIndexRequest;
+use App\Http\Requests\BookGetAllRequest;
 use App\Http\Requests\BookUpdateRequest;
 use App\Models\Book;
 use App\Services\BookService;
 use App\Traits\Controllers\FileDownloadTrait;
 use Exception;
-use Illuminate\Http\RedirectResponse;
-use Inertia\Inertia;
-use Inertia\Response;
+use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class BookController extends Controller
@@ -26,7 +25,7 @@ class BookController extends Controller
     /**
      * Display a listing of the books.
      */
-    public function index(BookIndexRequest $request): Response
+    public function getAll(BookGetAllRequest $request): JsonResponse
     {
         $sortField = $request->getSortField();
         $sortDirection = $request->getSortDirection();
@@ -34,60 +33,70 @@ class BookController extends Controller
 
         $books = $this->bookService->getAll($sortField, $sortDirection, $searchTerm);
 
-        return Inertia::render('Books/Index', [
-            'books' => $books,
-            'sortBy' => $sortField,
-            'sortDirection' => $sortDirection->value,
-            'searchTerm' => $searchTerm,
+        return response()->json([
+            'data' => $books,
         ]);
     }
 
     /**
      * Store a newly created book.
      */
-    public function store(BookCreateRequest $request): RedirectResponse
+    public function store(BookCreateRequest $request): JsonResponse
     {
         try {
             $book = $this->bookService->create($request->validated());
 
-            return to_route('books.index')
-                ->with('success', 'Book created successfully');
-        } catch (\App\Exceptions\BookCreationException $e) {
-            return to_route('books.index')
-                ->with('error', 'Failed to create book: ' . $e->getMessage());
+            return response()->json([
+                'data' => $book,
+                'message' => 'Book created successfully',
+            ]);
+        } catch (BookCreationException $e) {
+            return response()->json([
+                'message' => 'Failed to create book: ' . $e->getMessage(),
+                'errors' => ['general' => $e->getMessage()],
+            ], 500);
         }
     }
 
     /**
      * Remove the specified book from storage.
      */
-    public function destroy(Book $book): RedirectResponse
+    public function destroy(Book $book): JsonResponse
     {
         try {
             $this->bookService->delete($book->id);
 
-            return to_route('books.index')
-                ->with('success', 'Book deleted successfully');
+            return response()->json([
+                'data' => $book,
+                'message' => 'Book deleted successfully',
+            ]);
         } catch (Exception $e) {
-            return to_route('books.index')
-                ->with('error', 'Failed to delete book: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Failed to delete book: ' . $e->getMessage(),
+                'errors' => ['general' => $e->getMessage()],
+            ], 500);
         }
     }
 
     /**
      * Edit a specified book in storage.
      */
-    public function update(BookUpdateRequest $request, Book $book): RedirectResponse
+    public function update(BookUpdateRequest $request, Book $book): JsonResponse
     {
         try {
             $validatedRequest = $request->validated();
             $this->bookService->updateAuthor($book->id, $validatedRequest['author']);
 
-            return to_route('books.index')
-                ->with('success', 'Book updated successfully');
+            return response()->json([
+                'data' => $book,
+                'message' => 'Book updated successfully',
+            ]);
         } catch (Exception $e) {
-            return to_route('books.index')
-                ->with('error', 'Failed to update book: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Failed to update book:' . $e->getMessage(),
+                'errors' => ['general' => $e->getMessage()],
+            ], 500);
+
         }
     }
 

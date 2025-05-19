@@ -1,8 +1,9 @@
 import { useForm } from "@inertiajs/react";
+import error from "eslint-plugin-react/lib/util/error";
 import { useState } from "react";
 
 import { CreateFormProps } from "../types/Components/CreateForm.ts";
-import { BookData } from "../types/Services/BookService";
+import { Book, BookData } from "../types/Services/BookService";
 
 import FormInput from "./UI/FormInput.tsx";
 import Modal from "./UI/Model.tsx";
@@ -10,6 +11,7 @@ import Modal from "./UI/Model.tsx";
 export default function CreateForm({
     isOpen,
     onClose,
+    onBookCreated,
     bookService,
 }: CreateFormProps) {
     const { data, setData, processing, errors, reset } = useForm<BookData>({
@@ -23,13 +25,14 @@ export default function CreateForm({
 
         bookService.createBook(
             data,
-            () => {
-                reset();
+            (book: Book) => {
                 setIsSubmitting(false);
-                onClose();
+                reset();
+                if (onBookCreated) onBookCreated(book);
             },
             () => {
                 setIsSubmitting(false);
+                console.error("Error creating book:", error);
             },
         );
     };

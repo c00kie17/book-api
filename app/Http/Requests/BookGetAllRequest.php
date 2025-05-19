@@ -6,7 +6,7 @@ use App\Enums\SortDirection;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class BookIndexRequest extends FormRequest
+class BookGetAllRequest extends FormRequest
 {
     /**
      * The allowed sort fields for books.

@@ -1,10 +1,10 @@
-import { router } from "@inertiajs/react";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { saveAs } from "file-saver";
 
 import { ExportFormat } from "../types/Enums/ExportFormat.ts";
 import { SortDirection } from "../types/Enums/SortDirection.ts";
 import {
+    Book,
     BookData,
     Endpoints,
     HttpMethods,
@@ -14,45 +14,55 @@ import { IBookService } from "./IBookService";
 
 export default class BookService implements IBookService {
     private ENDPOINTS: Endpoints;
+    readonly API_BASE_URL: string;
 
-    constructor() {
+    constructor(baseUrl: string) {
+        this.API_BASE_URL = baseUrl;
         this.ENDPOINTS = {
-            BOOKS: "/books",
-            BOOK_BY_ID: (id: number) => `/books/${id}`,
-            BOOKS_EXPORT: "/books/export",
+            BOOKS: "books",
+            BOOK_BY_ID: (id: number) => `books/${id}`,
+            BOOKS_EXPORT: "books/export",
         };
     }
 
-    private handleResponse(
+    private async handleRequest<T>(
         method: HttpMethods,
-        url: string,
-        data?: Partial<BookData>,
-        onSuccess?: () => void,
-        onError?: (errors: unknown) => void,
-    ) {
-        const requestData = data !== undefined ? data : {};
-        return router[method](url, requestData, {
-            onSuccess: (_response) => {
-                if (onSuccess) {
-                    onSuccess();
-                }
-            },
-            onError: (errors) => {
-                if (onError) {
-                    onError(errors);
-                }
-            },
-            preserveState: true,
-            preserveScroll: true,
-        });
-    }
+        path: string,
+        data?: unknown,
+        onSuccess?: (data: T) => void,
+        onError?: (error: unknown) => void,
+        blob = false,
+    ): Promise<void> {
+        try {
+            const fullUrl = `${this.API_BASE_URL}/${path}`;
+            const options = {
+                method,
+                url: fullUrl,
+                data:
+                    method !== "get" && method !== "delete" ? data : undefined,
+                responseType: blob ? "blob" : "json",
+            } as AxiosRequestConfig;
 
-    createBook(
+            const response = await axios(options);
+
+            if (onSuccess) {
+                if (blob) {
+                    onSuccess(response.data);
+                } else {
+                    onSuccess(response.data.data);
+                }
+            }
+        } catch (error) {
+            console.error(`API request failed:`, error);
+            if (onError) onError(error);
+        }
+    }
+    async createBook(
         data: BookData,
-        onSuccess?: () => void,
+        onSuccess?: (data: Book) => void,
         onError?: (errors: unknown) => void,
-    ) {
-        return this.handleResponse(
+    ): Promise<void> {
+        return this.handleRequest(
             "post",
             this.ENDPOINTS.BOOKS,
             data,
@@ -65,8 +75,8 @@ export default class BookService implements IBookService {
         id: number,
         onSuccess?: () => void,
         onError?: (errors: unknown) => void,
-    ) {
-        return this.handleResponse(
+    ): Promise<void> {
+        return this.handleRequest(
             "delete",
             this.ENDPOINTS.BOOK_BY_ID(id),
             undefined,
@@ -80,8 +90,8 @@ export default class BookService implements IBookService {
         data: Partial<BookData>,
         onSuccess?: () => void,
         onError?: (errors: unknown) => void,
-    ) {
-        return this.handleResponse(
+    ): Promise<void> {
+        return this.handleRequest(
             "patch",
             this.ENDPOINTS.BOOK_BY_ID(id),
             data,
@@ -94,7 +104,7 @@ export default class BookService implements IBookService {
         field: string = "id",
         direction: SortDirection = SortDirection.DESC,
         searchTerm: string = "",
-        onSuccess?: () => void,
+        onSuccess?: (data: Book[]) => void,
         onError?: (errors: unknown) => void,
     ) {
         const params = new URLSearchParams();
@@ -105,7 +115,7 @@ export default class BookService implements IBookService {
             params.append("search_term", searchTerm.trim());
         }
 
-        return this.handleResponse(
+        return this.handleRequest(
             "get",
             `${this.ENDPOINTS.BOOKS}?${params.toString()}`,
             {},
@@ -113,23 +123,6 @@ export default class BookService implements IBookService {
             onError,
         );
     }
-
-    private async handleFileDownload(
-        url: string,
-        format: ExportFormat,
-        onSuccess?: () => void,
-        onError?: (error: unknown) => void,
-    ): Promise<void> {
-        try {
-            const response = await axios.get(url, { responseType: "blob" });
-            const defaultFilename = `books_export.${format.toString()}`;
-            saveAs(new Blob([response.data]), defaultFilename);
-            if (onSuccess) onSuccess();
-        } catch (error) {
-            if (onError) onError(error);
-        }
-    }
-
     async exportBooks(
         format: ExportFormat,
         fields: string[],
@@ -142,11 +135,17 @@ export default class BookService implements IBookService {
         params.append("file_format", format.toString());
         fields.forEach((field) => params.append("fields[]", field));
 
-        return this.handleFileDownload(
+        return this.handleRequest<Blob>(
+            "get",
             `${this.ENDPOINTS.BOOKS_EXPORT}?${params.toString()}`,
-            format,
-            onSuccess,
+            undefined,
+            (data) => {
+                const defaultFilename = `books_export.${format.toString()}`;
+                saveAs(new Blob([data]), defaultFilename);
+                if (onSuccess) onSuccess();
+            },
             onError,
+            true,
         );
     }
 }

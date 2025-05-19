@@ -23,9 +23,12 @@ class UpdateTest extends TestCase
             'author' => 'Updated Author',
         ];
 
-        $response = $this->patch(route('books.update', $book->id), $updateData);
+        $response = $this->patchJson(route('books.update', ['book' => $book->id]), $updateData);
 
-        $this->assertSuccessResponse($response, 'books.index', 'Book updated successfully');
+        $response->assertStatus(200);
+        $response->assertJson([
+            'message' => 'Book updated successfully',
+        ]);
 
         $this->assertDatabaseHas('books', [
             'id' => $book->id,
@@ -64,11 +67,15 @@ class UpdateTest extends TestCase
             'author' => 'Updated Author',
         ];
 
-        $response = $this->patch(route('books.update', $book->id), $updateData);
+        $response = $this->patchJson(route('books.update', ['book' => $book->id]), $updateData);
 
-        $response->assertRedirect();
-        $redirectResponse = $this->followRedirects($response);
-        $redirectResponse->assertSee('Failed to update book');
+        $response->assertStatus(500);
+        $response->assertJson([
+            'message' => 'Failed to update book:Failed to update book: Database error',
+            'errors' => [
+                'general' => 'Failed to update book: Database error',
+            ],
+        ]);
 
         $this->assertDatabaseHas('books', [
             'id' => $book->id,

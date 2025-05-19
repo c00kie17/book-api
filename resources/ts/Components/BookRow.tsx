@@ -4,11 +4,39 @@ import { ButtonVariant } from "../types/Components/UI/Button.ts";
 import Button from "./UI/Button.tsx";
 import TableRowField from "./UI/TableRowField.tsx";
 
-export default function BookRow({ book, bookService }: BookRowProps) {
+export default function BookRow({
+    book,
+    bookService,
+    onDeleted,
+    onUpdated,
+}: BookRowProps) {
     const handleDelete = () => {
         if (confirm(`Are you sure you want to delete "${book.title}"?`)) {
-            bookService.deleteBook(book.id);
+            bookService.deleteBook(
+                book.id,
+                () => {
+                    if (onDeleted) onDeleted();
+                },
+                (error) => {
+                    console.error("Error deleting book:", error);
+                    alert("Failed to delete book. Please try again.");
+                },
+            );
         }
+    };
+
+    const handleUpdateAuthor = (newAuthor: string) => {
+        bookService.updateBook(
+            book.id,
+            { author: newAuthor },
+            () => {
+                if (onUpdated) onUpdated();
+            },
+            (error) => {
+                console.error("Error updating book:", error);
+                alert("Failed to update book. Please try again.");
+            },
+        );
     };
 
     return (
@@ -18,9 +46,7 @@ export default function BookRow({ book, bookService }: BookRowProps) {
             <TableRowField
                 value={book.author}
                 editable={true}
-                onUpdate={(newAuthor) =>
-                    bookService.updateBook(book.id, { author: newAuthor })
-                }
+                onUpdate={handleUpdateAuthor}
             />
             <td className="px-4 py-2 border-b">
                 <Button
