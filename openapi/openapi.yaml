@@ -1,0 +1,423 @@
+openapi: '3.0.3'
+info:
+  description: |
+    API documentation for the Book Manager application. This API allows you to manage a list of books,
+    including creating, updating, and deleting books, as well as exporting book data in various formats.
+  version: '1.0.0'
+  title: 'Book Manager API'
+  contact:
+    name: 'API Support'
+servers:
+  - url: '/api'
+    description: API Server
+  - url: 'http://localhost:8000/api'
+    description: Local Development
+
+paths:
+  /books:
+    get:
+      tags:
+        - Books
+      summary: Get all books
+      description: Returns a list of all books, with optional sorting and filtering
+      operationId: getAllBooks
+      parameters:
+        - name: sort_by
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - id
+              - title
+              - author
+            default: id
+          description: Field to sort by
+        - name: sort_direction
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+          description: Sort direction
+        - name: search_term
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Search term to filter books by title or author
+      responses:
+        '200':
+          description: List of books
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          format: int64
+                          example: 1
+                        title:
+                          type: string
+                          example: To Kill a Mockingbird
+                        author:
+                          type: string
+                          example: Harper Lee
+                        created_at:
+                          type: string
+                          format: date-time
+                        updated_at:
+                          type: string
+                          format: date-time
+                      required:
+                        - id
+                        - title
+                        - author
+        '422':
+          description: Validation error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: The given data was invalid.
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                    example:
+                      sort_by: ["The sort_by field must be one of: id, title, author."]
+
+    post:
+      tags:
+        - Books
+      summary: Create a new book
+      description: Creates a new book with the provided data
+      operationId: createBook
+      requestBody:
+        description: Book creation data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: To Kill a Mockingbird
+                author:
+                  type: string
+                  example: Harper Lee
+              required:
+                - title
+                - author
+      responses:
+        '200':
+          description: Book details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int64
+                        example: 1
+                      title:
+                        type: string
+                        example: To Kill a Mockingbird
+                      author:
+                        type: string
+                        example: Harper Lee
+                      created_at:
+                        type: string
+                        format: date-time
+                      updated_at:
+                        type: string
+                        format: date-time
+                    required:
+                      - id
+                      - title
+                      - author
+                  message:
+                    type: string
+                    example: Book created successfully
+        '422':
+          description: Validation error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: The given data was invalid.
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                    example:
+                      title: ["The title field is required."]
+                      author: ["The author field is required."]
+        '500':
+          description: Error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: string
+
+  /books/{book}:
+    parameters:
+      - name: book
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: ID of the book
+
+    delete:
+      tags:
+        - Books
+      summary: Delete a book
+      description: Deletes a book with the specified ID
+      operationId: deleteBook
+      responses:
+        '200':
+          description: Book details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int64
+                        example: 1
+                      title:
+                        type: string
+                        example: To Kill a Mockingbird
+                      author:
+                        type: string
+                        example: Harper Lee
+                      created_at:
+                        type: string
+                        format: date-time
+                      updated_at:
+                        type: string
+                        format: date-time
+                    required:
+                      - id
+                      - title
+                      - author
+                  message:
+                    type: string
+                    example: Book deleted successfully
+        '404':
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Book not found
+        '500':
+          description: Error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: string
+
+    patch:
+      tags:
+        - Books
+      summary: Update a book's author
+      description: Updates the author name of a book with the specified ID
+      operationId: updateBook
+      requestBody:
+        description: Book update data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                author:
+                  type: string
+                  example: Updated Author Name
+              required:
+                - author
+      responses:
+        '200':
+          description: Book details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int64
+                        example: 1
+                      title:
+                        type: string
+                        example: To Kill a Mockingbird
+                      author:
+                        type: string
+                        example: Updated Author Name
+                      created_at:
+                        type: string
+                        format: date-time
+                      updated_at:
+                        type: string
+                        format: date-time
+                    required:
+                      - id
+                      - title
+                      - author
+                  message:
+                    type: string
+                    example: Book updated successfully
+        '404':
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Book not found
+        '422':
+          description: Validation error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: The given data was invalid.
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                    example:
+                      author: ["The author field is required."]
+        '500':
+          description: Error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: string
+
+  /books/export:
+    get:
+      tags:
+        - Books
+      summary: Export books
+      description: Exports books in CSV or XML format
+      operationId: exportBooks
+      parameters:
+        - name: file_format
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - csv
+              - xml
+          description: Format to export books
+        - name: fields[]
+          in: query
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - title
+                - author
+          style: form
+          explode: true
+          description: Fields to include in the export
+      responses:
+        '200':
+          description: Successful export
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+            application/xml:
+              schema:
+                type: string
+                format: binary
+        '422':
+          description: Validation error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: The given data was invalid.
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                    example:
+                      file_format: ["The file_format field is required."]
+                      "fields[]": ["At least one field must be selected."]
