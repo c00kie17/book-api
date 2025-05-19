@@ -1,5 +1,4 @@
 import { useForm } from "@inertiajs/react";
-import error from "eslint-plugin-react/lib/util/error";
 import { useState } from "react";
 
 import { CreateFormProps } from "../types/Components/CreateForm.ts";
@@ -32,7 +31,6 @@ export default function CreateForm({
             },
             () => {
                 setIsSubmitting(false);
-                console.error("Error creating book:", error);
             },
         );
     };
