@@ -65,7 +65,7 @@ export default function EditableField({
             {label && <span className="text-sm text-gray-500">{label}:</span>}
             <span>{value}</span>
             <button
-                onClick={() =>{
+                onClick={() => {
                     setCurrentValue(value);
                     setIsEditing(true);
                 }}
