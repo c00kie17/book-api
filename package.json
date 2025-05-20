@@ -73,7 +73,8 @@
             "^.+\\.(js|jsx)$": "babel-jest"
         },
         "moduleNameMapper": {
-            "^@/(.*)$": "<rootDir>/resources/js/$1"
+            "^@/(.*)$": "<rootDir>/resources/js/$1",
+            "../../../config.ts": "<rootDir>/resources/ts/__tests__/__mocks__/config.ts"
         },
         "setupFilesAfterEnv": [
             "<rootDir>/jest.setup.ts"

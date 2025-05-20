@@ -96,19 +96,19 @@ The documentation is built with Swagger UI and provides a complete reference of 
    cp .env.example .env
    ```
 
-4. Start the Docker containers:
+4. Start Laravel Sail:
    ```bash
-   docker-compose up -d
+   ./vendor/bin/sail up -d
    ```
 
 5. Install dependencies and set up the application:
     ```bash
-    docker-compose exec app composer install
-    docker-compose exec app php artisan key:generate
-    docker-compose exec app php artisan migrate
-    docker-compose exec app php artisan db:seed --class=BookSeeder
-    docker-compose exec app npm install
-    docker-compose exec app npm run build
+    ./vendor/bin/sail composer install
+    ./vendor/bin/sail artisan key:generate
+    ./vendor/bin/sail artisan migrate
+    ./vendor/bin/sail artisan db:seed --class=BookSeeder
+    ./vendor/bin/sail npm install
+    ./vendor/bin/sail npm run build
     ```
 
 6. Visit `http://localhost` in your browser
