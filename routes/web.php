@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\ViewController;
 use App\Http\Controllers\OpenAPIController;
+use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ViewController::class, 'index'])->name('home');

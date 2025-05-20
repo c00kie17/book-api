@@ -79,14 +79,14 @@ class GetAllTest extends BaseTestCase
 
     public function test_get_all_books_searches_for_books_when_search_term_provided(): void
     {
-        $searchTerm = 'test';
+        $searchTerm = 'Test';
         $expectedBooks = new Collection([
             new Book(['id' => 1, 'title' => 'test Book', 'author' => 'Author 1']),
         ]);
 
         $this->bookRepository->shouldReceive('search')
             ->once()
-            ->with($searchTerm, 'author', SortDirection::DESC->value)
+            ->with(strtolower($searchTerm), 'author', SortDirection::DESC->value)
             ->andReturn($expectedBooks);
 
         $result = $this->bookService->getAll('author', SortDirection::DESC, $searchTerm);

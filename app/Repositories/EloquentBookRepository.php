@@ -27,8 +27,8 @@ class EloquentBookRepository implements BookRepositoryInterface
     {
         return $this->model
             ->where(function ($query) use ($searchTerm) {
-                $query->where('title', 'LIKE', "%$searchTerm%")
-                    ->orWhere('author', 'LIKE', "%$searchTerm%");
+                $query->where('title', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('author', 'LIKE', "%{$searchTerm}%");
             })
             ->orderBy($sortBy, $sortDirection)
             ->get();

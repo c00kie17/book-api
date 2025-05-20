@@ -9,6 +9,14 @@ A web application for managing a collection of books. This project was built wit
 - **Database**: SQLite (default), MySQL (optional)
 - **Testing**: PHPUnit for PHP, Jest for React components
 
+## API Documentation
+
+When running locally or in development/staging environments, API documentation is available at:
+- http://localhost/api/docs (when running locally)
+- https://immense-crag-13349-b3769a5192d4.herokuapp.com/api/docs (on Heroku)
+
+The documentation is built with Swagger UI and provides a complete reference of all available API endpoints.
+
 ## Prerequisites
 
 - PHP 8.2 or higher

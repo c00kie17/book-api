@@ -29,7 +29,7 @@ class BookService
     {
         if (trim($searchTerm) !== '') {
             return $this->bookRepository->search(
-                $searchTerm,
+                strtolower(trim($searchTerm)),
                 $sortBy,
                 $sortDirection->value,
             );
